@@ -5,7 +5,7 @@
  * 2. A k-NN / Cosine Similarity Retrieval-Augmented Generation (RAG) parameter lookup.
  * 3. A Sparse Identification of Non-linear Dynamics (SINDy) symbolic regression solver.
  * 
- * Author: Antigravity AI
+ * Author: Sourish Senapati
  * Date: June 2, 2026
  */
 

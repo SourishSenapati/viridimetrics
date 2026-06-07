@@ -3,7 +3,7 @@
  * Implements mathematical models for Leaf Area & Gravimetric PM Normalization (LAPDN),
  * Foliar Dust Stress & Photosynthetic Resilience (FDSPRP), and Leaf Litter Organic Pollutant Leaching (LLDTLS).
  * 
- * Author: Antigravity AI
+ * Author: Sourish Senapati
  * Date: May 28, 2026
  * Institution: Jadavpur University (JU)
  */

@@ -4,7 +4,7 @@
  * 
  * Run with: node test_models.js
  * 
- * Author: Antigravity AI
+ * Author: Sourish Senapati
  * Date: May 28, 2026
  */
 

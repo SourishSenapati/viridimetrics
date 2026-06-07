@@ -7,33 +7,43 @@ TERMS AND CONDITIONS FOR USE, REPRODUCTION, PORTING, AND MODIFICATION
 This software, its source code, mathematical formulations, empirical coefficients, and associated database files (collectively, the "Software") are proprietary and confidential. By downloading, accessing, copying, running, or utilizing the Software, you agree to be bound by the following terms and conditions:
 
 ## 1. Permitted Educational Use (Unmodified Only)
+
 You are granted a non-exclusive, non-transferable, revocable license to run the Software in its original, unmodified form solely for classroom teaching, student instruction, and educational demonstrations at accredited academic institutions. No fees are charged for this specific use case.
 
 ## 2. Modification & Derivative Work Restrictions (Paid License Required)
+
 You are STRICTLY PROHIBITED from modifying, editing, refactoring, extending, or creating derivative works of the Software or its mathematical models for any purpose (including classroom teaching) unless you have purchased a written Commercial and Modification License from the author.
 
 ## 3. Reverse Engineering, Porting, & Translation Loophole Closure
+
 You shall not translate, port, rewrite, or adapt the mathematical equations, algorithms, coefficients, or database structure of this Software into any other programming language, software environment, or data storage system (including but not limited to Python, R, MATLAB, Rust, C++, C#, Java, Julia, Microsoft Excel/Google Sheets, or SQL databases) for any commercial or non-classroom purpose. Any such translation constitutes an unauthorized derivative work and a direct breach of this License.
 
 ## 4. Ingestion & Machine Learning/AI Training Loophole Closure
+
 The Software, including its source code, databases, mathematical models, and outputs, must not be used for the purpose of training, testing, tuning, validating, or serving as input/context data (e.g., via Retrieval-Augmented Generation or few-shot prompts) for any machine learning models, large language models (LLMs), neural networks, or automated code generation tools.
 
 ## 5. Commercial, Consulting, & Indirect Services (Paid License Required)
+
 Any commercial use of the Software is strictly prohibited without a paid Commercial License. This includes:
-* Using the Software to perform environmental, building, agricultural, or HVAC audits for paying clients or private consultations (even if the Software itself is not redistributed to the client).
-* Exposing the calculations, inputs, or outputs of the Software through a wrapper service, API proxy, SaaS application, or automated reporting system.
-* Deploying the Software to any public or private hosting environment (e.g., Vercel, Netlify, AWS, private clouds) for any commercial, non-classroom, or corporate utility.
+
+*   Using the Software to perform environmental, building, agricultural, or HVAC audits for paying clients or private consultations (even if the Software itself is not redistributed to the client).
+*   Exposing the calculations, inputs, or outputs of the Software through a wrapper service, API proxy, SaaS application, or automated reporting system.
+*   Deploying the Software to any public or private hosting environment (e.g., Vercel, Netlify, AWS, private clouds) for any commercial, non-classroom, or corporate utility.
 
 ## 6. Academic Publications & Patents (Mandatory Co-Authorship)
+
 If you use this Software, its algorithms, databases, or output reports in any capacity to generate data, statistics, figures, or conclusions for any academic paper, scientific publication, pre-print (e.g., arXiv, bioRxiv, medRxiv), conference abstract/presentation, thesis, dissertation, or patent application, you MUST:
-1. Contact the author at **sourish.senapati@jadavpuruniversity.in** prior to drafting or submitting.
-2. Formally include **Sourish Senapati** as a co-author on the publication, manuscript, or patent application, attributing credit for the mathematical design and software development.
-3. Fully cite this repository and primary literature references in the bibliography of the paper.
+
+1.  Contact the author at **sourish.senapati@jadavpuruniversity.in** prior to drafting or submitting.
+2.  Formally include **Sourish Senapati** as a co-author on the publication, manuscript, or patent application, attributing credit for the mathematical design and software development.
+3.  Fully cite this repository and primary literature references in the bibliography of the paper.
 
 ## 7. Remedies for Breach
+
 Any violation of this License immediately terminates all permissions granted herein.
-* **Academic Remedy:** If a research paper or patent is published using results from this Software in violation of the co-authorship or licensing terms of Section 6, the author reserves the right to petition the journal publishers, academic institutions, indexers (e.g., Scopus, Web of Science), or patent offices for the immediate retraction or correction of the published work for intellectual property infringement and academic fraud.
-* **Legal Remedy:** Violators will be subject to copyright infringement claims, breach of contract claims, and statutory damages under applicable international copyright and trade secret laws.
+
+*   **Academic Remedy:** If a research paper or patent is published using results from this Software in violation of the co-authorship or licensing terms of Section 6, the author reserves the right to petition the journal publishers, academic institutions, indexers (e.g., Scopus, Web of Science), or patent offices for the immediate retraction or correction of the published work for intellectual property infringement and academic fraud.
+*   **Legal Remedy:** Violators will be subject to copyright infringement claims, breach of contract claims, and statutory damages under applicable international copyright and trade secret laws.
 
 For commercial licensing requests, modification permits, or publication alignment, contact:
 **Sourish Senapati** <sourish.senapati@jadavpuruniversity.in>

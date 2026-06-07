@@ -4,7 +4,7 @@
  * 
  * Run with: node tools/cli.js --help
  * 
- * Author: Antigravity AI
+ * Author: Sourish Senapati
  * Date: June 7, 2026
  */
 

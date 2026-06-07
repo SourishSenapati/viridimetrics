@@ -2,7 +2,7 @@
  * Plant Biomonitoring Open Source Integration Engine
  * Connects literature-derived species database traits to the mathematical models.
  * 
- * Author: Antigravity AI
+ * Author: Sourish Senapati
  * Date: June 2, 2026
  */
 
