@@ -1,0 +1,22 @@
+{
+  "name": "@viridimetrics/phytoremediation-sizing-roi",
+  "version": "1.0.0",
+  "description": "Soil Heavy Metal Phytoremediation Sizing & ROI Estimator for hyperaccumulator cleanups.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "phytoremediation",
+    "hyperaccumulator",
+    "soil-remediation",
+    "roi-estimator",
+    "civil-engineering"
+  ],
+  "author": "Sourish Senapati <sourish.senapati@jadavpuruniversity.in>",
+  "license": "Proprietary",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

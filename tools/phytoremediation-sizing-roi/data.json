@@ -1,0 +1,241 @@
+{
+  "species": [
+    {
+      "speciesKey": "alstonia_scholaris",
+      "scientificName": "Alstonia scholaris",
+      "commonName": "Devil tree",
+      "biomassYieldKgHa": 8000,
+      "bcf": 1.2,
+      "sourcePapers": [
+        "Munam et al. (2025)",
+        "Chaturvedi et al. (2013)"
+      ]
+    },
+    {
+      "speciesKey": "polyalthia_longifolia",
+      "scientificName": "Polyalthia longifolia",
+      "commonName": "Ashoka tree",
+      "biomassYieldKgHa": 7000,
+      "bcf": 1,
+      "sourcePapers": [
+        "Munam et al. (2025)",
+        "Chaturvedi et al. (2013)"
+      ]
+    },
+    {
+      "speciesKey": "ficus_religiosa",
+      "scientificName": "Ficus religiosa",
+      "commonName": "Sacred fig / Peepal",
+      "biomassYieldKgHa": 12000,
+      "bcf": 2.5,
+      "sourcePapers": [
+        "Munam et al. (2025)",
+        "Chaturvedi et al. (2013)"
+      ]
+    },
+    {
+      "speciesKey": "eucalyptus_globulus",
+      "scientificName": "Eucalyptus globulus",
+      "commonName": "Tasmanian blue gum",
+      "biomassYieldKgHa": 15000,
+      "bcf": 0.8,
+      "sourcePapers": [
+        "Munam et al. (2025)"
+      ]
+    },
+    {
+      "speciesKey": "morus_alba",
+      "scientificName": "Morus alba",
+      "commonName": "White mulberry",
+      "biomassYieldKgHa": 9000,
+      "bcf": 1.5,
+      "sourcePapers": [
+        "Munam et al. (2025)"
+      ]
+    },
+    {
+      "speciesKey": "ficus_benjamina",
+      "scientificName": "Ficus benjamina",
+      "commonName": "Weeping fig",
+      "biomassYieldKgHa": 10000,
+      "bcf": 2,
+      "sourcePapers": [
+        "Munam et al. (2025)"
+      ]
+    },
+    {
+      "speciesKey": "pinus_sylvestris",
+      "scientificName": "Pinus sylvestris",
+      "commonName": "Scots pine",
+      "biomassYieldKgHa": 6000,
+      "bcf": 0.5,
+      "sourcePapers": [
+        "Sæbø et al. (2012)",
+        "Przybysz et al. (2014)"
+      ]
+    },
+    {
+      "speciesKey": "hedera_helix",
+      "scientificName": "Hedera helix",
+      "commonName": "Common ivy",
+      "biomassYieldKgHa": 4000,
+      "bcf": 1.4,
+      "sourcePapers": [
+        "Dzierżanowski et al. (2011)",
+        "Przybysz et al. (2014)"
+      ]
+    },
+    {
+      "speciesKey": "betula_pendula",
+      "scientificName": "Betula pendula",
+      "commonName": "Silver birch",
+      "biomassYieldKgHa": 7500,
+      "bcf": 1.1,
+      "sourcePapers": [
+        "Sæbø et al. (2012)"
+      ]
+    },
+    {
+      "speciesKey": "tilia_cordata",
+      "scientificName": "Tilia cordata",
+      "commonName": "Small-leaved lime",
+      "biomassYieldKgHa": 8500,
+      "bcf": 1.3,
+      "sourcePapers": [
+        "Sæbø et al. (2012)",
+        "Dzierżanowski et al. (2011)",
+        "Moțiu et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "quercus_robur",
+      "scientificName": "Quercus robur",
+      "commonName": "English oak",
+      "biomassYieldKgHa": 9500,
+      "bcf": 1,
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "fagus_sylvatica",
+      "scientificName": "Fagus sylvatica",
+      "commonName": "European beech",
+      "biomassYieldKgHa": 8000,
+      "bcf": 0.9,
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "taxus_baccata",
+      "scientificName": "Taxus baccata",
+      "commonName": "English yew",
+      "biomassYieldKgHa": 5000,
+      "bcf": 0.6,
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "chamaecyparis_lawsoniana",
+      "scientificName": "Chamaecyparis lawsoniana",
+      "commonName": "Lawson cypress",
+      "biomassYieldKgHa": 5500,
+      "bcf": 0.7,
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "westringia_fruticosa",
+      "scientificName": "Westringia fruticosa",
+      "commonName": "Coast rosemary",
+      "biomassYieldKgHa": 3000,
+      "bcf": 1.5,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "acacia_parramattensis",
+      "scientificName": "Acacia parramattensis",
+      "commonName": "Parramatta wattle",
+      "biomassYieldKgHa": 6500,
+      "bcf": 1.2,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "acacia_longifolia",
+      "scientificName": "Acacia longifolia",
+      "commonName": "Sydney golden wattle",
+      "biomassYieldKgHa": 5800,
+      "bcf": 0.9,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "allocasuarina_littoralis",
+      "scientificName": "Allocasuarina littoralis",
+      "commonName": "Black sheoak",
+      "biomassYieldKgHa": 4800,
+      "bcf": 0.7,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "hakea_salicifolia",
+      "scientificName": "Hakea salicifolia",
+      "commonName": "Willow-leaved hakea",
+      "biomassYieldKgHa": 4200,
+      "bcf": 1.1,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "banksia_integrifolia",
+      "scientificName": "Banksia integrifolia",
+      "commonName": "Coast banksia",
+      "biomassYieldKgHa": 7000,
+      "bcf": 0.8,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "pittosporum_tobira",
+      "scientificName": "Pittosporum tobira",
+      "commonName": "Japanese cheesewood",
+      "biomassYieldKgHa": 5200,
+      "bcf": 1.3,
+      "sourcePapers": [
+        "Gaglione et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "crataegus_monogyna",
+      "scientificName": "Crataegus monogyna",
+      "commonName": "Common hawthorn",
+      "biomassYieldKgHa": 4500,
+      "bcf": 1,
+      "sourcePapers": [
+        "Moniuszko et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "prunus_cerasifera",
+      "scientificName": "Prunus cerasifera",
+      "commonName": "Cherry plum",
+      "biomassYieldKgHa": 6000,
+      "bcf": 1.1,
+      "sourcePapers": [
+        "Moniuszko et al. (2026)"
+      ]
+    }
+  ]
+}

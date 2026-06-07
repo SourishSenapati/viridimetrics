@@ -1,0 +1,23 @@
+{
+  "name": "@viridimetrics/dermal-skin-air-partition",
+  "version": "1.0.0",
+  "description": "Skin Dermal Partition & Exposure Modeler for occupational organic contaminant dermal dose estimation.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "dermal-absorption",
+    "partition-coefficient",
+    "pah",
+    "voc",
+    "industrial-hygiene",
+    "occupational-safety"
+  ],
+  "author": "Sourish Senapati <sourish.senapati@jadavpuruniversity.in>",
+  "license": "Proprietary",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

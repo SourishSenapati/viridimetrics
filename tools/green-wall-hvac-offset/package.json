@@ -1,0 +1,23 @@
+{
+  "name": "@viridimetrics/green-wall-hvac-offset",
+  "version": "1.0.0",
+  "description": "Urban Green Wall Evapotranspirational Cooling & Building HVAC Offset Calculator.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "green-wall",
+    "evapotranspiration",
+    "shading-effect",
+    "hvac-offset",
+    "building-energy",
+    "carbon-offset"
+  ],
+  "author": "Sourish Senapati <sourish.senapati@jadavpuruniversity.in>",
+  "license": "Proprietary",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

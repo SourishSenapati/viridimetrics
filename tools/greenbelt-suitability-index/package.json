@@ -1,0 +1,23 @@
+{
+  "name": "@viridimetrics/greenbelt-suitability-index",
+  "version": "1.0.0",
+  "description": "Air Pollution Tolerance Index & Anticipated Performance Index Classifier for urban greenbelt planning.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "biomonitoring",
+    "apti",
+    "api",
+    "ecology",
+    "air-pollution",
+    "greenbelt"
+  ],
+  "author": "Sourish Senapati <sourish.senapati@jadavpuruniversity.in>",
+  "license": "Proprietary",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

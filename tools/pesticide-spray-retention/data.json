@@ -1,0 +1,218 @@
+{
+  "species": [
+    {
+      "speciesKey": "alstonia_scholaris",
+      "scientificName": "Alstonia scholaris",
+      "commonName": "Devil tree",
+      "epicuticularWax": 120,
+      "sourcePapers": [
+        "Munam et al. (2025)",
+        "Chaturvedi et al. (2013)"
+      ]
+    },
+    {
+      "speciesKey": "polyalthia_longifolia",
+      "scientificName": "Polyalthia longifolia",
+      "commonName": "Ashoka tree",
+      "epicuticularWax": 110,
+      "sourcePapers": [
+        "Munam et al. (2025)",
+        "Chaturvedi et al. (2013)"
+      ]
+    },
+    {
+      "speciesKey": "ficus_religiosa",
+      "scientificName": "Ficus religiosa",
+      "commonName": "Sacred fig / Peepal",
+      "epicuticularWax": 380,
+      "sourcePapers": [
+        "Munam et al. (2025)",
+        "Chaturvedi et al. (2013)"
+      ]
+    },
+    {
+      "speciesKey": "eucalyptus_globulus",
+      "scientificName": "Eucalyptus globulus",
+      "commonName": "Tasmanian blue gum",
+      "epicuticularWax": 580,
+      "sourcePapers": [
+        "Munam et al. (2025)"
+      ]
+    },
+    {
+      "speciesKey": "morus_alba",
+      "scientificName": "Morus alba",
+      "commonName": "White mulberry",
+      "epicuticularWax": 80,
+      "sourcePapers": [
+        "Munam et al. (2025)"
+      ]
+    },
+    {
+      "speciesKey": "ficus_benjamina",
+      "scientificName": "Ficus benjamina",
+      "commonName": "Weeping fig",
+      "epicuticularWax": 320,
+      "sourcePapers": [
+        "Munam et al. (2025)"
+      ]
+    },
+    {
+      "speciesKey": "pinus_sylvestris",
+      "scientificName": "Pinus sylvestris",
+      "commonName": "Scots pine",
+      "epicuticularWax": 715.6,
+      "sourcePapers": [
+        "Sæbø et al. (2012)",
+        "Przybysz et al. (2014)"
+      ]
+    },
+    {
+      "speciesKey": "hedera_helix",
+      "scientificName": "Hedera helix",
+      "commonName": "Common ivy",
+      "epicuticularWax": 45.2,
+      "sourcePapers": [
+        "Dzierżanowski et al. (2011)",
+        "Przybysz et al. (2014)"
+      ]
+    },
+    {
+      "speciesKey": "betula_pendula",
+      "scientificName": "Betula pendula",
+      "commonName": "Silver birch",
+      "epicuticularWax": 280,
+      "sourcePapers": [
+        "Sæbø et al. (2012)"
+      ]
+    },
+    {
+      "speciesKey": "tilia_cordata",
+      "scientificName": "Tilia cordata",
+      "commonName": "Small-leaved lime",
+      "epicuticularWax": 85,
+      "sourcePapers": [
+        "Sæbø et al. (2012)",
+        "Dzierżanowski et al. (2011)",
+        "Moțiu et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "quercus_robur",
+      "scientificName": "Quercus robur",
+      "commonName": "English oak",
+      "epicuticularWax": 140,
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "fagus_sylvatica",
+      "scientificName": "Fagus sylvatica",
+      "commonName": "European beech",
+      "epicuticularWax": 75,
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "taxus_baccata",
+      "scientificName": "Taxus baccata",
+      "commonName": "English yew",
+      "epicuticularWax": 450,
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "chamaecyparis_lawsoniana",
+      "scientificName": "Chamaecyparis lawsoniana",
+      "commonName": "Lawson cypress",
+      "epicuticularWax": 380,
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "westringia_fruticosa",
+      "scientificName": "Westringia fruticosa",
+      "commonName": "Coast rosemary",
+      "epicuticularWax": 90,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "acacia_parramattensis",
+      "scientificName": "Acacia parramattensis",
+      "commonName": "Parramatta wattle",
+      "epicuticularWax": 130,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "acacia_longifolia",
+      "scientificName": "Acacia longifolia",
+      "commonName": "Sydney golden wattle",
+      "epicuticularWax": 240,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "allocasuarina_littoralis",
+      "scientificName": "Allocasuarina littoralis",
+      "commonName": "Black sheoak",
+      "epicuticularWax": 310,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "hakea_salicifolia",
+      "scientificName": "Hakea salicifolia",
+      "commonName": "Willow-leaved hakea",
+      "epicuticularWax": 160,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "banksia_integrifolia",
+      "scientificName": "Banksia integrifolia",
+      "commonName": "Coast banksia",
+      "epicuticularWax": 290,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "pittosporum_tobira",
+      "scientificName": "Pittosporum tobira",
+      "commonName": "Japanese cheesewood",
+      "epicuticularWax": 260,
+      "sourcePapers": [
+        "Gaglione et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "crataegus_monogyna",
+      "scientificName": "Crataegus monogyna",
+      "commonName": "Common hawthorn",
+      "epicuticularWax": 95,
+      "sourcePapers": [
+        "Moniuszko et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "prunus_cerasifera",
+      "scientificName": "Prunus cerasifera",
+      "commonName": "Cherry plum",
+      "epicuticularWax": 80,
+      "sourcePapers": [
+        "Moniuszko et al. (2026)"
+      ]
+    }
+  ]
+}

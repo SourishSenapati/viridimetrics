@@ -1,0 +1,24 @@
+{
+  "name": "@viridimetrics/core",
+  "version": "1.0.0",
+  "description": "An advanced mathematical suite for ecological biomonitoring, urban greening, and cross-industry applications.",
+  "main": "cli.js",
+  "scripts": {
+    "test": "node test_all_modular.js",
+    "start": "node cli.js"
+  },
+  "keywords": [
+    "ecology",
+    "biomonitoring",
+    "phytoremediation",
+    "hvac-efficiency",
+    "dermal-risk",
+    "sindy",
+    "rag"
+  ],
+  "author": "Sourish Senapati <sourish.senapati@jadavpuruniversity.in>",
+  "license": "Proprietary",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

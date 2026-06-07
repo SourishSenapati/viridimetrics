@@ -1,0 +1,563 @@
+{
+  "species": [
+    {
+      "speciesKey": "alstonia_scholaris",
+      "scientificName": "Alstonia scholaris",
+      "commonName": "Devil tree",
+      "heavyMetalTF": {
+        "lead": 0.15,
+        "cadmium": 0.8,
+        "chromium": 0.35,
+        "nickel": 0.5,
+        "copper": 0.4,
+        "zinc": 0.9
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 45,
+        "cadmium": 55,
+        "chromium": 80,
+        "nickel": 82,
+        "copper": 8,
+        "zinc": 9
+      },
+      "sourcePapers": [
+        "Munam et al. (2025)",
+        "Chaturvedi et al. (2013)"
+      ]
+    },
+    {
+      "speciesKey": "polyalthia_longifolia",
+      "scientificName": "Polyalthia longifolia",
+      "commonName": "Ashoka tree",
+      "heavyMetalTF": {
+        "lead": 0.12,
+        "cadmium": 0.7,
+        "chromium": 0.3,
+        "nickel": 0.45,
+        "copper": 0.35,
+        "zinc": 0.8
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 40,
+        "cadmium": 50,
+        "chromium": 82,
+        "nickel": 80,
+        "copper": 7,
+        "zinc": 8
+      },
+      "sourcePapers": [
+        "Munam et al. (2025)",
+        "Chaturvedi et al. (2013)"
+      ]
+    },
+    {
+      "speciesKey": "ficus_religiosa",
+      "scientificName": "Ficus religiosa",
+      "commonName": "Sacred fig / Peepal",
+      "heavyMetalTF": {
+        "lead": 0.45,
+        "cadmium": 1.5,
+        "chromium": 0.8,
+        "nickel": 1.2,
+        "copper": 0.6,
+        "zinc": 1.8
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 42,
+        "cadmium": 52,
+        "chromium": 81,
+        "nickel": 84,
+        "copper": 9,
+        "zinc": 10
+      },
+      "sourcePapers": [
+        "Munam et al. (2025)",
+        "Chaturvedi et al. (2013)"
+      ]
+    },
+    {
+      "speciesKey": "eucalyptus_globulus",
+      "scientificName": "Eucalyptus globulus",
+      "commonName": "Tasmanian blue gum",
+      "heavyMetalTF": {
+        "lead": 0.08,
+        "cadmium": 0.5,
+        "chromium": 0.2,
+        "nickel": 0.3,
+        "copper": 0.2,
+        "zinc": 0.6
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 35,
+        "cadmium": 45,
+        "chromium": 78,
+        "nickel": 76,
+        "copper": 6,
+        "zinc": 7
+      },
+      "sourcePapers": [
+        "Munam et al. (2025)"
+      ]
+    },
+    {
+      "speciesKey": "morus_alba",
+      "scientificName": "Morus alba",
+      "commonName": "White mulberry",
+      "heavyMetalTF": {
+        "lead": 0.22,
+        "cadmium": 1.1,
+        "chromium": 0.5,
+        "nickel": 0.75,
+        "copper": 0.45,
+        "zinc": 1.2
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 46,
+        "cadmium": 56,
+        "chromium": 83,
+        "nickel": 82,
+        "copper": 8,
+        "zinc": 9
+      },
+      "sourcePapers": [
+        "Munam et al. (2025)"
+      ]
+    },
+    {
+      "speciesKey": "ficus_benjamina",
+      "scientificName": "Ficus benjamina",
+      "commonName": "Weeping fig",
+      "heavyMetalTF": {
+        "lead": 0.38,
+        "cadmium": 1.3,
+        "chromium": 0.7,
+        "nickel": 1,
+        "copper": 0.5,
+        "zinc": 1.5
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 43,
+        "cadmium": 53,
+        "chromium": 82,
+        "nickel": 83,
+        "copper": 9,
+        "zinc": 10
+      },
+      "sourcePapers": [
+        "Munam et al. (2025)"
+      ]
+    },
+    {
+      "speciesKey": "pinus_sylvestris",
+      "scientificName": "Pinus sylvestris",
+      "commonName": "Scots pine",
+      "heavyMetalTF": {
+        "lead": 0.05,
+        "cadmium": 0.4,
+        "chromium": 0.15,
+        "nickel": 0.25,
+        "copper": 0.15,
+        "zinc": 0.5
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 30,
+        "cadmium": 40,
+        "chromium": 75,
+        "nickel": 72,
+        "copper": 5,
+        "zinc": 6
+      },
+      "sourcePapers": [
+        "Sæbø et al. (2012)",
+        "Przybysz et al. (2014)"
+      ]
+    },
+    {
+      "speciesKey": "hedera_helix",
+      "scientificName": "Hedera helix",
+      "commonName": "Common ivy",
+      "heavyMetalTF": {
+        "lead": 0.2,
+        "cadmium": 1,
+        "chromium": 0.4,
+        "nickel": 0.6,
+        "copper": 0.3,
+        "zinc": 1.1
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 44,
+        "cadmium": 54,
+        "chromium": 81,
+        "nickel": 81,
+        "copper": 8,
+        "zinc": 8
+      },
+      "sourcePapers": [
+        "Dzierżanowski et al. (2011)",
+        "Przybysz et al. (2014)"
+      ]
+    },
+    {
+      "speciesKey": "betula_pendula",
+      "scientificName": "Betula pendula",
+      "commonName": "Silver birch",
+      "heavyMetalTF": {
+        "lead": 0.18,
+        "cadmium": 0.9,
+        "chromium": 0.38,
+        "nickel": 0.55,
+        "copper": 0.38,
+        "zinc": 1
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 42,
+        "cadmium": 52,
+        "chromium": 81,
+        "nickel": 80,
+        "copper": 8,
+        "zinc": 9
+      },
+      "sourcePapers": [
+        "Sæbø et al. (2012)"
+      ]
+    },
+    {
+      "speciesKey": "tilia_cordata",
+      "scientificName": "Tilia cordata",
+      "commonName": "Small-leaved lime",
+      "heavyMetalTF": {
+        "lead": 0.25,
+        "cadmium": 1.2,
+        "chromium": 0.45,
+        "nickel": 0.7,
+        "copper": 0.4,
+        "zinc": 1.3
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 45,
+        "cadmium": 55,
+        "chromium": 85,
+        "nickel": 84,
+        "copper": 8,
+        "zinc": 8
+      },
+      "sourcePapers": [
+        "Sæbø et al. (2012)",
+        "Dzierżanowski et al. (2011)",
+        "Moțiu et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "quercus_robur",
+      "scientificName": "Quercus robur",
+      "commonName": "English oak",
+      "heavyMetalTF": {
+        "lead": 0.15,
+        "cadmium": 0.8,
+        "chromium": 0.3,
+        "nickel": 0.5,
+        "copper": 0.3,
+        "zinc": 0.8
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 41,
+        "cadmium": 51,
+        "chromium": 80,
+        "nickel": 79,
+        "copper": 7,
+        "zinc": 8
+      },
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "fagus_sylvatica",
+      "scientificName": "Fagus sylvatica",
+      "commonName": "European beech",
+      "heavyMetalTF": {
+        "lead": 0.18,
+        "cadmium": 0.95,
+        "chromium": 0.35,
+        "nickel": 0.58,
+        "copper": 0.34,
+        "zinc": 0.95
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 43,
+        "cadmium": 53,
+        "chromium": 82,
+        "nickel": 81,
+        "copper": 7,
+        "zinc": 8
+      },
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "taxus_baccata",
+      "scientificName": "Taxus baccata",
+      "commonName": "English yew",
+      "heavyMetalTF": {
+        "lead": 0.07,
+        "cadmium": 0.5,
+        "chromium": 0.18,
+        "nickel": 0.3,
+        "copper": 0.18,
+        "zinc": 0.6
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 32,
+        "cadmium": 42,
+        "chromium": 76,
+        "nickel": 74,
+        "copper": 6,
+        "zinc": 6
+      },
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "chamaecyparis_lawsoniana",
+      "scientificName": "Chamaecyparis lawsoniana",
+      "commonName": "Lawson cypress",
+      "heavyMetalTF": {
+        "lead": 0.09,
+        "cadmium": 0.6,
+        "chromium": 0.22,
+        "nickel": 0.35,
+        "copper": 0.22,
+        "zinc": 0.7
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 34,
+        "cadmium": 44,
+        "chromium": 78,
+        "nickel": 76,
+        "copper": 6,
+        "zinc": 7
+      },
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "westringia_fruticosa",
+      "scientificName": "Westringia fruticosa",
+      "commonName": "Coast rosemary",
+      "heavyMetalTF": {
+        "lead": 0.25,
+        "cadmium": 1.2,
+        "chromium": 0.5,
+        "nickel": 0.75,
+        "copper": 0.45,
+        "zinc": 1.4
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 46,
+        "cadmium": 56,
+        "chromium": 84,
+        "nickel": 83,
+        "copper": 8,
+        "zinc": 9
+      },
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "acacia_parramattensis",
+      "scientificName": "Acacia parramattensis",
+      "commonName": "Parramatta wattle",
+      "heavyMetalTF": {
+        "lead": 0.16,
+        "cadmium": 0.85,
+        "chromium": 0.51,
+        "nickel": 0.54,
+        "copper": 0.36,
+        "zinc": 0.92
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 42,
+        "cadmium": 52,
+        "chromium": 81,
+        "nickel": 79,
+        "copper": 7,
+        "zinc": 8
+      },
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "acacia_longifolia",
+      "scientificName": "Acacia longifolia",
+      "commonName": "Sydney golden wattle",
+      "heavyMetalTF": {
+        "lead": 0.11,
+        "cadmium": 0.65,
+        "chromium": 0.09,
+        "nickel": 0.42,
+        "copper": 0.28,
+        "zinc": 0.72
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 38,
+        "cadmium": 48,
+        "chromium": 79,
+        "nickel": 77,
+        "copper": 6,
+        "zinc": 7
+      },
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "allocasuarina_littoralis",
+      "scientificName": "Allocasuarina littoralis",
+      "commonName": "Black sheoak",
+      "heavyMetalTF": {
+        "lead": 0.08,
+        "cadmium": 0.52,
+        "chromium": 0.2,
+        "nickel": 0.32,
+        "copper": 0.19,
+        "zinc": 0.62
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 33,
+        "cadmium": 43,
+        "chromium": 77,
+        "nickel": 75,
+        "copper": 6,
+        "zinc": 6
+      },
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "hakea_salicifolia",
+      "scientificName": "Hakea salicifolia",
+      "commonName": "Willow-leaved hakea",
+      "heavyMetalTF": {
+        "lead": 0.18,
+        "cadmium": 0.92,
+        "chromium": 0.36,
+        "nickel": 0.58,
+        "copper": 0.34,
+        "zinc": 0.98
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 43,
+        "cadmium": 53,
+        "chromium": 82,
+        "nickel": 81,
+        "copper": 8,
+        "zinc": 8
+      },
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "banksia_integrifolia",
+      "scientificName": "Banksia integrifolia",
+      "commonName": "Coast banksia",
+      "heavyMetalTF": {
+        "lead": 0.1,
+        "cadmium": 0.58,
+        "chromium": 0.24,
+        "nickel": 0.38,
+        "copper": 0.24,
+        "zinc": 0.78
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 36,
+        "cadmium": 46,
+        "chromium": 78,
+        "nickel": 77,
+        "copper": 6,
+        "zinc": 7
+      },
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "pittosporum_tobira",
+      "scientificName": "Pittosporum tobira",
+      "commonName": "Japanese cheesewood",
+      "heavyMetalTF": {
+        "lead": 0.18,
+        "cadmium": 0.95,
+        "chromium": 0.4,
+        "nickel": 0.62,
+        "copper": 0.36,
+        "zinc": 1.05
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 44,
+        "cadmium": 54,
+        "chromium": 82,
+        "nickel": 81,
+        "copper": 7,
+        "zinc": 8
+      },
+      "sourcePapers": [
+        "Gaglione et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "crataegus_monogyna",
+      "scientificName": "Crataegus monogyna",
+      "commonName": "Common hawthorn",
+      "heavyMetalTF": {
+        "lead": 0.22,
+        "cadmium": 1.1,
+        "chromium": 0.44,
+        "nickel": 0.68,
+        "copper": 0.38,
+        "zinc": 1.15
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 45,
+        "cadmium": 55,
+        "chromium": 83,
+        "nickel": 82,
+        "copper": 8,
+        "zinc": 8
+      },
+      "sourcePapers": [
+        "Moniuszko et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "prunus_cerasifera",
+      "scientificName": "Prunus cerasifera",
+      "commonName": "Cherry plum",
+      "heavyMetalTF": {
+        "lead": 0.2,
+        "cadmium": 1,
+        "chromium": 0.42,
+        "nickel": 0.65,
+        "copper": 0.35,
+        "zinc": 1.1
+      },
+      "heavyMetalExtractionRate": {
+        "lead": 44,
+        "cadmium": 54,
+        "chromium": 82,
+        "nickel": 81,
+        "copper": 7,
+        "zinc": 8
+      },
+      "sourcePapers": [
+        "Moniuszko et al. (2026)"
+      ]
+    }
+  ]
+}

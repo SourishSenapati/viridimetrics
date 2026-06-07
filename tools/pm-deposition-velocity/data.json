@@ -1,0 +1,241 @@
+{
+  "species": [
+    {
+      "speciesKey": "alstonia_scholaris",
+      "scientificName": "Alstonia scholaris",
+      "commonName": "Devil tree",
+      "morphology": "planar",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Munam et al. (2025)",
+        "Chaturvedi et al. (2013)"
+      ]
+    },
+    {
+      "speciesKey": "polyalthia_longifolia",
+      "scientificName": "Polyalthia longifolia",
+      "commonName": "Ashoka tree",
+      "morphology": "lanceolate",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Munam et al. (2025)",
+        "Chaturvedi et al. (2013)"
+      ]
+    },
+    {
+      "speciesKey": "ficus_religiosa",
+      "scientificName": "Ficus religiosa",
+      "commonName": "Sacred fig / Peepal",
+      "morphology": "planar",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Munam et al. (2025)",
+        "Chaturvedi et al. (2013)"
+      ]
+    },
+    {
+      "speciesKey": "eucalyptus_globulus",
+      "scientificName": "Eucalyptus globulus",
+      "commonName": "Tasmanian blue gum",
+      "morphology": "lanceolate",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Munam et al. (2025)"
+      ]
+    },
+    {
+      "speciesKey": "morus_alba",
+      "scientificName": "Morus alba",
+      "commonName": "White mulberry",
+      "morphology": "planar",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Munam et al. (2025)"
+      ]
+    },
+    {
+      "speciesKey": "ficus_benjamina",
+      "scientificName": "Ficus benjamina",
+      "commonName": "Weeping fig",
+      "morphology": "elliptic",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Munam et al. (2025)"
+      ]
+    },
+    {
+      "speciesKey": "pinus_sylvestris",
+      "scientificName": "Pinus sylvestris",
+      "commonName": "Scots pine",
+      "morphology": "acicular",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Sæbø et al. (2012)",
+        "Przybysz et al. (2014)"
+      ]
+    },
+    {
+      "speciesKey": "hedera_helix",
+      "scientificName": "Hedera helix",
+      "commonName": "Common ivy",
+      "morphology": "planar",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Dzierżanowski et al. (2011)",
+        "Przybysz et al. (2014)"
+      ]
+    },
+    {
+      "speciesKey": "betula_pendula",
+      "scientificName": "Betula pendula",
+      "commonName": "Silver birch",
+      "morphology": "planar",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Sæbø et al. (2012)"
+      ]
+    },
+    {
+      "speciesKey": "tilia_cordata",
+      "scientificName": "Tilia cordata",
+      "commonName": "Small-leaved lime",
+      "morphology": "planar",
+      "isPubescent": true,
+      "sourcePapers": [
+        "Sæbø et al. (2012)",
+        "Dzierżanowski et al. (2011)",
+        "Moțiu et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "quercus_robur",
+      "scientificName": "Quercus robur",
+      "commonName": "English oak",
+      "morphology": "planar",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "fagus_sylvatica",
+      "scientificName": "Fagus sylvatica",
+      "commonName": "European beech",
+      "morphology": "planar",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "taxus_baccata",
+      "scientificName": "Taxus baccata",
+      "commonName": "English yew",
+      "morphology": "acicular",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "chamaecyparis_lawsoniana",
+      "scientificName": "Chamaecyparis lawsoniana",
+      "commonName": "Lawson cypress",
+      "morphology": "acicular",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Nechita et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "westringia_fruticosa",
+      "scientificName": "Westringia fruticosa",
+      "commonName": "Coast rosemary",
+      "morphology": "lanceolate",
+      "isPubescent": true,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "acacia_parramattensis",
+      "scientificName": "Acacia parramattensis",
+      "commonName": "Parramatta wattle",
+      "morphology": "planar",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "acacia_longifolia",
+      "scientificName": "Acacia longifolia",
+      "commonName": "Sydney golden wattle",
+      "morphology": "lanceolate",
+      "isPubescent": true,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "allocasuarina_littoralis",
+      "scientificName": "Allocasuarina littoralis",
+      "commonName": "Black sheoak",
+      "morphology": "acicular",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "hakea_salicifolia",
+      "scientificName": "Hakea salicifolia",
+      "commonName": "Willow-leaved hakea",
+      "morphology": "lanceolate",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "banksia_integrifolia",
+      "scientificName": "Banksia integrifolia",
+      "commonName": "Coast banksia",
+      "morphology": "obovate",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Leonard et al. (2016)"
+      ]
+    },
+    {
+      "speciesKey": "pittosporum_tobira",
+      "scientificName": "Pittosporum tobira",
+      "commonName": "Japanese cheesewood",
+      "morphology": "obovate",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Gaglione et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "crataegus_monogyna",
+      "scientificName": "Crataegus monogyna",
+      "commonName": "Common hawthorn",
+      "morphology": "planar",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Moniuszko et al. (2026)"
+      ]
+    },
+    {
+      "speciesKey": "prunus_cerasifera",
+      "scientificName": "Prunus cerasifera",
+      "commonName": "Cherry plum",
+      "morphology": "planar",
+      "isPubescent": false,
+      "sourcePapers": [
+        "Moniuszko et al. (2026)"
+      ]
+    }
+  ]
+}

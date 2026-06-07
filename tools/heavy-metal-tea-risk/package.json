@@ -1,0 +1,23 @@
+{
+  "name": "@viridimetrics/heavy-metal-tea-risk",
+  "version": "1.0.0",
+  "description": "Heavy Metal Translocation & Dietary Exposure Modeler for human tea steeping chronic toxicity risk.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "biomonitoring",
+    "heavy-metals",
+    "translocation",
+    "dietary-risk",
+    "tea-infusion",
+    "hazard-quotient"
+  ],
+  "author": "Sourish Senapati <sourish.senapati@jadavpuruniversity.in>",
+  "license": "Proprietary",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phyto-Telemetry & Particulate Matter Biomonitoring Explorer</title>
+    <meta name="description" content="An interactive analytical dashboard exploring the particulate matter monitoring potential of established plant bio-monitors. Based on empirical data from Jadavpur University, Sæbø, Leonard, and Corada.">
+    <meta name="keywords" content="Particulate Matter, Biomonitoring, Phytoremediation, PM2.5, PM10, Epicuticular Wax, Jadavpur University, Environmental Telemetry">
+    <meta name="author" content="Sourish Senapati">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dark-theme">
+    <!-- Ambient Background Particles -->
+    <div class="ambient-glow" id="glow-1"></div>
+    <div class="ambient-glow" id="glow-2"></div>
+    <div class="ambient-glow" id="glow-3"></div>
+
+    <!-- Navigation Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="logo-area">
+                <span class="academy-badge">Jadavpur University</span>
+                <h1 id="app-main-title">PHYTO-TELEMETRY & PM BIO-MONITORING</h1>
+            </div>
+            <nav class="main-nav">
+                <button class="nav-tab active" id="tab-btn-dashboard" onclick="switchTab('dashboard')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-tab" id="tab-btn-literature" onclick="switchTab('literature')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    <span>Literature Review</span>
+                </button>
+                <button class="nav-tab" id="tab-btn-planner" onclick="switchTab('planner')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Municipal Planner</span>
+                </button>
+                <button class="nav-tab" id="tab-btn-report" onclick="switchTab('report')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <span>Full Report</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="app-main">
+        
+        <!-- DASHBOARD TAB -->
+        <section id="tab-content-dashboard" class="tab-panel active">
+            <div class="dashboard-hero">
+                <div class="hero-text">
+                    <h2>Comparison of Particulate Matter Monitoring Potential of Plant Bio-Monitors</h2>
+                    <p class="hero-meta">Author: <strong>Sourish Senapati</strong> (ORCID: 0009-0000-8799-4340) &bull; Institution: <strong>Jadavpur University</strong></p>
+                    <p class="hero-desc">An empirical evaluation mapping how micro-morphological leaf traits (cuticular waxes, trichomes, leaf shape) dictate the interception, embedding, and retention of toxic airborne particles across species.</p>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                
+                <!-- Card 1: PM Size Scale Explorer -->
+                <div class="grid-card glass-card span-2" id="pm-scale-explorer-card">
+                    <div class="card-header">
+                        <h3>Interactive PM Size & Scaling Explorer</h3>
+                        <p class="card-subtitle">Drag to scale up and compare particulate aerodynamic diameters relative to a human hair (60 µm)</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="scale-interface">
+                            <div class="scale-visual-container">
+                                <svg id="pm-scale-svg" viewBox="0 0 800 250" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Background grid line -->
+                                    <line x1="0" y1="125" x2="800" y2="125" stroke="#ffffff" stroke-opacity="0.1" stroke-dasharray="5,5"/>
+                                    <!-- Human Hair -->
+                                    <g id="hair-group">
+                                        <rect x="20" y="25" width="200" height="200" rx="10" fill="url(#hair-gradient)" stroke="rgba(255,255,255,0.1)"/>
+                                        <text x="120" y="240" text-anchor="middle" fill="#a0aec0" font-size="12" font-family="Inter">Human Hair (50–70 µm)</text>
+                                    </g>
+                                    <!-- PM10 -->
+                                    <g id="pm10-group">
+                                        <circle cx="380" cy="125" r="30" fill="url(#pm10-gradient)" stroke="#ff9f43" stroke-width="1.5"/>
+                                        <text x="380" y="180" text-anchor="middle" fill="#ff9f43" font-size="12" font-family="Inter">PM₁₀ (10 µm)</text>
+                                    </g>
+                                    <!-- PM2.5 -->
+                                    <g id="pm25-group">
+                                        <circle cx="550" cy="125" r="7.5" fill="url(#pm25-gradient)" stroke="#00d2d3" stroke-width="1"/>
+                                        <text x="550" y="160" text-anchor="middle" fill="#00d2d3" font-size="12" font-family="Inter">PM₂.₅ (2.5 µm)</text>
+                                    </g>
+                                    <!-- PM0.2 -->
+                                    <g id="pm02-group">
+                                        <circle cx="700" cy="125" r="2" fill="url(#pm02-gradient)" stroke="#5f27cd" stroke-width="0.5"/>
+                                        <text x="700" y="150" text-anchor="middle" fill="#a55eea" font-size="12" font-family="Inter">PM₀.₂ (0.2 µm)</text>
+                                    </g>
+                                    
+                                    <!-- SVG Definitions for Gradients -->
+                                    <defs>
+                                        <linearGradient id="hair-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#4a4a4a"/>
+                                            <stop offset="100%" stop-color="#1a1a1a"/>
+                                        </linearGradient>
+                                        <linearGradient id="pm10-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#ffb8b8"/>
+                                            <stop offset="100%" stop-color="#ff9f43"/>
+                                        </linearGradient>
+                                        <linearGradient id="pm25-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#00d2d3"/>
+                                            <stop offset="100%" stop-color="#01a3a4"/>
+                                        </linearGradient>
+                                        <linearGradient id="pm02-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#a55eea"/>
+                                            <stop offset="100%" stop-color="#5f27cd"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="scale-controls">
+                                <div class="slider-group">
+                                    <label for="pm-zoom-slider">Simulation Zoom Factor: <span id="zoom-value">1.0x</span></label>
+                                    <input type="range" id="pm-zoom-slider" min="0.5" max="15" step="0.1" value="1.0" class="premium-slider" oninput="updatePMScale()">
+                                </div>
+                                <div class="scale-legends">
+                                    <div class="legend-item"><span class="color-dot hair-dot"></span> <span>Hair (60 µm)</span></div>
+                                    <div class="legend-item"><span class="color-dot pm10-dot"></span> <span>PM₁₀ Coarse (10 µm)</span></div>
+                                    <div class="legend-item"><span class="color-dot pm25-dot"></span> <span>PM₂.₅ Fine (2.5 µm)</span></div>
+                                    <div class="legend-item"><span class="color-dot pm02-dot"></span> <span>PM₀.₂ Ultrafine (0.2 µm)</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Pathogenesis / Human Body Reach -->
+                <div class="grid-card glass-card" id="pathogenesis-card">
+                    <div class="card-header">
+                        <h3>Anatomical Pathogenesis</h3>
+                        <p class="card-subtitle">Select a target physiological region to view particulate penetration and health risks</p>
+                    </div>
+                    <div class="card-body pathogenesis-body">
+                        <div class="anatomical-display">
+                            <!-- SVG Human Silhouette with highlighted areas -->
+                            <svg id="human-body-svg" viewBox="0 0 200 350" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Head & Body Silhouette -->
+                                <path d="M100 20 c12 0, 20 8, 20 20 c0 10, -5 18, -15 20 l3 10 l25 20 c10 8, 12 25, 12 40 l-8 100 l-10 -5 l-10 -70 l-2 110 l-10 80 l-5 15 l-10 -15 l5 -80 l-10 -110 l-10 110 l5 80 l-10 15 l-5 -15 l-10 -80 l-2 -110 l-10 70 l-10 5 l-8 -100 c0 -15, 2 -32, 12 -40 l25 -20 l3 -10 c-10 -2, -15 -10, -15 -20 c0 -12, 8 -20, 20 -20 Z" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1.5"/>
+                                
+                                <!-- Highlight Zones -->
+                                <!-- Upper Respiratory Track (Nose/Throat) -->
+                                <circle id="zone-upper" cx="100" cy="50" r="12" class="anatomy-zone" onclick="showPathology('upper')"/>
+                                
+                                <!-- Lower Lungs (Alveoli) -->
+                                <path id="zone-lungs" d="M85 90 q15 -10 30 0 q10 20 0 35 q-15 10 -30 0 q-10 -20 0 -35 Z" class="anatomy-zone" onclick="showPathology('lungs')"/>
+                                
+                                <!-- Vascular System (Circulatory) -->
+                                <path id="zone-vascular" d="M100 110 L100 170 M90 120 L75 140 M110 120 L125 140 M92 165 L80 230 M108 165 L120 230" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none" class="anatomy-zone-line" onclick="showPathology('vascular')"/>
+                                <circle id="zone-heart" cx="103" cy="115" r="7" class="anatomy-zone" onclick="showPathology('vascular')"/>
+                            </svg>
+                        </div>
+                        <div class="pathology-info" id="pathology-details-box">
+                            <div class="instructional-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a0aec0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                <p>Click a highlighted region on the anatomical model to examine PM penetration and disease pathways.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Retention Mechanics - Rain Simulator -->
+                <div class="grid-card glass-card span-2" id="rain-simulator-card">
+                    <div class="card-header">
+                        <h3>Retention Mechanics: SPM vs WPM (Rain Wash-off Simulator)</h3>
+                        <p class="card-subtitle">Observe how epicuticular wax embeds and permanently sequesters fine PM0.2 against heavy precipitation</p>
+                    </div>
+                    <div class="card-body rain-simulator-body">
+                        <div class="rain-canvas-area">
+                            <div class="rain-drops" id="rain-overlay"></div>
+                            
+                            <!-- Leaf Cuticle Cross Section -->
+                            <svg id="leaf-cross-section" viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Air/Atmosphere -->
+                                <rect x="0" y="0" width="500" height="60" fill="transparent"/>
+                                
+                                <!-- Epicuticular Wax Layer (Dynamic height based on select) -->
+                                <rect id="leaf-wax-layer" x="0" y="60" width="500" height="25" fill="#2d6a4f" opacity="0.8"/>
+                                <text x="15" y="77" fill="#ffffff" font-size="10" font-weight="600" font-family="Inter" letter-spacing="1">EPICUTICULAR WAX LAYER</text>
+                                
+                                <!-- Cuticle / Epidermis Cells -->
+                                <g id="leaf-cells">
+                                    <rect x="0" y="85" width="500" height="115" fill="#1b4332"/>
+                                    <!-- Cell boundaries -->
+                                    <path d="M 0 120 L 500 120 M 0 160 L 500 160 M 50 85 L 50 200 M 100 85 L 100 200 M 150 85 L 150 200 M 200 85 L 200 200 M 250 85 L 250 200 M 300 85 L 300 200 M 350 85 L 350 200 M 400 85 L 400 200 M 450 85 L 450 200" stroke="#0d1f14" stroke-width="2"/>
+                                    <text x="250" y="150" text-anchor="middle" fill="rgba(255,255,255,0.15)" font-size="14" font-weight="700" font-family="Outfit" letter-spacing="2">FOLIAR EPIDERMIS CELLS</text>
+                                </g>
+
+                                <!-- SPM particles (Surface-deposited, loosely sitting above wax) -->
+                                <g id="spm-particles-group">
+                                    <!-- Large/coarse PM10 orange circles -->
+                                    <circle cx="80" cy="50" r="8" fill="#ff9f43" class="spm-particle coarse-pm"/>
+                                    <circle cx="210" cy="53" r="7" fill="#ff9f43" class="spm-particle coarse-pm"/>
+                                    <circle cx="340" cy="48" r="9" fill="#ff9f43" class="spm-particle coarse-pm"/>
+                                    <circle cx="450" cy="52" r="8" fill="#ff9f43" class="spm-particle coarse-pm"/>
+                                    <!-- Fine PM2.5 cyan circles -->
+                                    <circle cx="130" cy="57" r="4" fill="#00d2d3" class="spm-particle fine-pm"/>
+                                    <circle cx="280" cy="58" r="3.5" fill="#00d2d3" class="spm-particle fine-pm"/>
+                                    <circle cx="390" cy="56" r="4" fill="#00d2d3" class="spm-particle fine-pm"/>
+                                </g>
+
+                                <!-- WPM particles (Wax-embedded, inside wax layer) -->
+                                <g id="wpm-particles-group">
+                                    <circle cx="40" cy="72" r="2.5" fill="#00d2d3" class="wpm-particle"/>
+                                    <circle cx="110" cy="70" r="1.5" fill="#a55eea" class="wpm-particle"/>
+                                    <circle cx="170" cy="75" r="2" fill="#00d2d3" class="wpm-particle"/>
+                                    <circle cx="250" cy="68" r="1.8" fill="#a55eea" class="wpm-particle"/>
+                                    <circle cx="310" cy="73" r="2.5" fill="#00d2d3" class="wpm-particle"/>
+                                    <circle cx="370" cy="71" r="1.5" fill="#a55eea" class="wpm-particle"/>
+                                    <circle cx="430" cy="74" r="2" fill="#00d2d3" class="wpm-particle"/>
+                                    <circle cx="480" cy="69" r="1.5" fill="#a55eea" class="wpm-particle"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="rain-simulator-controls">
+                            <div class="simulation-selector-box">
+                                <label for="rain-species-select">Select Plant Bio-monitor Profile:</label>
+                                <select id="rain-species-select" class="premium-select" onchange="changeRainSpeciesProfile()">
+                                    <option value="scots-pine">Pinus sylvestris (Scots Pine) - High Wax (715.6 µg/cm²)</option>
+                                    <option value="common-ivy">Hedera helix (Common Ivy) - Low Wax (45.2 µg/cm²)</option>
+                                    <option value="intermediate">Intermediate Taxa - Balanced Wax (250 µg/cm²)</option>
+                                </select>
+                            </div>
+                            <div class="sim-action-buttons">
+                                <button id="rain-trigger-btn" class="action-btn" onclick="toggleRainSimulation()">Simulate Heavy Rainfall</button>
+                                <button id="rain-reset-btn" class="action-btn secondary" onclick="resetRainSimulation()">Reset Particles</button>
+                            </div>
+                            <div class="sim-feedback-box" id="rain-feedback-msg">
+                                <p><strong>Baseline State</strong>: Foliage contains both loosely bound surface particulates (SPM) and embedded lipophilic wax particulates (WPM).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Morphometric Regression Simulator -->
+                <div class="grid-card glass-card span-3" id="regression-simulator-card">
+                    <div class="card-header">
+                        <h3>Species Morphometric Regression Simulator</h3>
+                        <p class="card-subtitle">Model predicted PM accumulation loads (µg/cm²) by adjusting species-specific traits based on Sæbø's regression models (R² = 0.55 for PM₀.₂)</p>
+                    </div>
+                    <div class="card-body regression-body">
+                        <div class="regression-sliders">
+                            <!-- Slider 1: Epicuticular Wax -->
+                            <div class="slider-container">
+                                <div class="slider-labels">
+                                    <span class="trait-title">Epicuticular Wax Volume</span>
+                                    <span class="trait-value" id="wax-slider-val">400.0 µg/cm²</span>
+                                </div>
+                                <input type="range" id="reg-wax-slider" min="10" max="800" step="5" value="400" class="premium-slider" oninput="runRegressionSimulation()">
+                                <div class="slider-helper-labels">
+                                    <span>Hedera (Low)</span>
+                                    <span>Pinus (Apex High)</span>
+                                </div>
+                            </div>
+                            <!-- Slider 2: Trichome Density -->
+                            <div class="slider-container">
+                                <div class="slider-labels">
+                                    <span class="trait-title">Foliar Trichome (Hair) Density</span>
+                                    <span class="trait-value" id="hair-slider-val">Score 2.5 / 5</span>
+                                </div>
+                                <input type="range" id="reg-hair-slider" min="1" max="5" step="0.1" value="2.5" class="premium-slider" oninput="runRegressionSimulation()">
+                                <div class="slider-helper-labels">
+                                    <span>Glabrous (Bald)</span>
+                                    <span>Highly Pubescent (Hairy)</span>
+                                </div>
+                            </div>
+                            <!-- Slider 3: SLA -->
+                            <div class="slider-container">
+                                <div class="slider-labels">
+                                    <span class="trait-title">Specific Leaf Area (SLA)</span>
+                                    <span class="trait-value" id="sla-slider-val">120.0 cm²/g</span>
+                                </div>
+                                <input type="range" id="reg-sla-slider" min="20" max="250" step="5" value="120" class="premium-slider" oninput="runRegressionSimulation()">
+                                <div class="slider-helper-labels">
+                                    <span>Thick Needles (Pinus)</span>
+                                    <span>Thin Papery Leaves</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="regression-results">
+                            <div class="result-box glow-emerald">
+                                <span class="result-label">Predicted Total PM Load</span>
+                                <div class="result-number"><span id="reg-total-pm">31.42</span> <span class="unit">µg/cm²</span></div>
+                                <span class="trait-sig">Trichomes (β=0.31) & Wax (β=0.66) driving</span>
+                            </div>
+                            <div class="result-box glow-amber">
+                                <span class="result-label">PM₁₀ Capture Capacity</span>
+                                <div class="result-number"><span id="reg-pm10">24.58</span> <span class="unit">µg/cm²</span></div>
+                                <span class="trait-sig">Coarse Interception &bull; SLA (β=-0.35)</span>
+                            </div>
+                            <div class="result-box glow-cyan">
+                                <span class="result-label">PM₂.₅ Capture Capacity</span>
+                                <div class="result-number"><span id="reg-pm25">6.12</span> <span class="unit">µg/cm²</span></div>
+                                <span class="trait-sig">Fine Interception &bull; Hairs (β=0.45)</span>
+                            </div>
+                            <div class="result-box glow-violet">
+                                <span class="result-label">PM₀.₂ (Ultrafine) Sequestration</span>
+                                <div class="result-number"><span id="reg-pm02">1.84</span> <span class="unit">µg/cm²</span></div>
+                                <span class="trait-sig">Deep Lipophilic Trapping (β=0.78)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LITERATURE REVIEW TAB -->
+        <section id="tab-content-literature" class="tab-panel">
+            <div class="lit-explorer-container">
+                <!-- Left Sidebar: List of 15 Studies -->
+                <div class="lit-sidebar">
+                    <h3 class="sidebar-title">Biomonitoring Studies</h3>
+                    <div class="lit-study-list" id="lit-study-list-container">
+                        <!-- Dynamically populated via JS -->
+                    </div>
+                </div>
+                
+                <!-- Right Content Area: Detailed Paper Viewer -->
+                <div class="lit-content" id="lit-detail-view-container">
+                    <div class="instructional-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#a0aec0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                        <p>Select a scientific study from the left sidebar to explore its background, methodology, results, and relevance to municipal planning.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MUNICIPAL PLANNER TAB -->
+        <section id="tab-content-planner" class="tab-panel">
+            <div class="planner-header">
+                <h2>Municipal Bio-monitor Selection Assistant</h2>
+                <p>Configure your local environmental conditions and target airspace properties to discover the optimal plant bio-monitors based on empirical trials.</p>
+            </div>
+            
+            <div class="planner-interface">
+                <div class="planner-sidebar glass-card">
+                    <h3>Environmental Parameters</h3>
+                    
+                    <div class="planner-form">
+                        <div class="form-group">
+                            <label for="param-canopy">Target Vertical Stratum (Canopy Level):</label>
+                            <select id="param-canopy" class="premium-select" onchange="runPlannerRecommendation()">
+                                <option value="ground">Ground-Level (Roadside shrubs & understory)</option>
+                                <option value="upper">Upper-Canopy (Tall street trees)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="param-traffic">Ambient Pollution Profile:</label>
+                            <select id="param-traffic" class="premium-select" onchange="runPlannerRecommendation()">
+                                <option value="heavy">Heavy Traffic & Resuspended Soils</option>
+                                <option value="industrial">Heavy Metal Industrial Plumes</option>
+                                <option value="moderate">Moderate Urban Standard</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="param-rain">Rainfall & Wash-off Risk:</label>
+                            <select id="param-rain" class="premium-select" onchange="runPlannerRecommendation()">
+                                <option value="high">High Precipitation (Frequent wash-off potential)</option>
+                                <option value="low">Arid / Low Rainfall (Sustained dust loading)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="param-target-pm">Critical Particle Fraction Target:</label>
+                            <select id="param-target-pm" class="premium-select" onchange="runPlannerRecommendation()">
+                                <option value="ultrafine">Ultrafine PM₀.₂ (Toxic/vascular threat)</option>
+                                <option value="fine">Fine PM₂.₅ (General respiratory threat)</option>
+                                <option value="coarse">Coarse PM₁₀ (Dust, road aggregates)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                    <div class="recommendations-container" id="planner-recommendations-list">
+                        <!-- Dynamically populated recommendation cards -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADVANCED ANALYTICAL TOOLS SECTION -->
+            <div class="planner-advanced-tools" style="margin-top: 2.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+                <div class="card-header" style="padding-left: 0; padding-right: 0;">
+                    <h2 style="font-family: var(--font-heading); font-size: 1.5rem; color: #ffffff;">Advanced Biomonitoring Analytical Models</h2>
+                    <p class="card-subtitle">Bridge research gaps by modeling leaf-level gravimetric normalizations, physiological dust stress, and persistent organic pollutant leaching kinetics.</p>
+                </div>
+                
+                <div class="tools-tab-container glass-card" style="margin-top: 1.25rem; padding: 1.5rem; background: rgba(10, 15, 30, 0.4);">
+                    <!-- Tool Tabs Navigation -->
+                    <div class="tool-tabs" style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem;">
+                        <button class="nav-tab active" id="tool-tab-btn-lapdn" onclick="switchToolTab('lapdn')" style="padding: 0.5rem 1rem; font-size: 0.85rem; font-family: var(--font-heading); font-weight: 600;">1. Leaf Normalizer (LAPDN)</button>
+                        <button class="nav-tab" id="tool-tab-btn-fdsprp" onclick="switchToolTab('fdsprp')" style="padding: 0.5rem 1rem; font-size: 0.85rem; font-family: var(--font-heading); font-weight: 600;">2. Dust Stress Predictor (FDSPRP)</button>
+                        <button class="nav-tab" id="tool-tab-btn-lldtls" onclick="switchToolTab('lldtls')" style="padding: 0.5rem 1rem; font-size: 0.85rem; font-family: var(--font-heading); font-weight: 600;">3. Litter Leaching Simulator (LLDTLS)</button>
+                    </div>
+
+                    <!-- Tool Panel 1: LAPDN -->
+                    <div class="tool-panel active" id="tool-panel-lapdn">
+                        <div class="tool-grid" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem;">
+                            <div class="tool-inputs" style="display: flex; flex-direction: column; gap: 1rem;">
+                                <h3 style="font-family: var(--font-heading); font-size: 1.1rem; color: #ffffff;">Leaf Area & Gravimetric PM Normalizer</h3>
+                                <div class="form-group">
+                                    <label for="lapdn-morph" style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Leaf Morphology Geometry:</label>
+                                    <select id="lapdn-morph" class="premium-select" style="width: 100%; min-width: unset;" onchange="runLapdnCalculation()">
+                                        <option value="planar">Planar (Deciduous Broadleaf - CF = 0.78)</option>
+                                        <option value="lanceolate">Lanceolate (Willow/Acacia - CF = 0.65)</option>
+                                        <option value="elliptic">Elliptic/Obovate (Ficus/Pittosporum - CF = 0.72)</option>
+                                        <option value="acicular">Acicular (Pine Needle - CF = 0.05)</option>
+                                    </select>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;">
+                                    <div class="form-group">
+                                        <label for="lapdn-length" style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Length (cm):</label>
+                                        <input type="number" id="lapdn-length" class="premium-input" value="12.0" step="0.5" min="0.1" oninput="runLapdnCalculation()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lapdn-width" style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Width (cm):</label>
+                                        <input type="number" id="lapdn-width" class="premium-input" value="4.5" step="0.5" min="0.1" oninput="runLapdnCalculation()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lapdn-count" style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Count:</label>
+                                        <input type="number" id="lapdn-count" class="premium-input" value="30" step="1" min="1" oninput="runLapdnCalculation()">
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div class="form-group">
+                                        <label for="lapdn-spm-tare" style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">SPM Tare Wt (mg):</label>
+                                        <input type="number" id="lapdn-spm-tare" class="premium-input" value="45.20" step="0.1" min="0" oninput="runLapdnCalculation()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lapdn-spm-final" style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">SPM Final Wt (mg):</label>
+                                        <input type="number" id="lapdn-spm-final" class="premium-input" value="51.80" step="0.1" min="0" oninput="runLapdnCalculation()">
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div class="form-group">
+                                        <label for="lapdn-wpm-tare" style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">WPM Tare Wt (mg):</label>
+                                        <input type="number" id="lapdn-wpm-tare" class="premium-input" value="45.15" step="0.1" min="0" oninput="runLapdnCalculation()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lapdn-wpm-final" style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">WPM Final Wt (mg):</label>
+                                        <input type="number" id="lapdn-wpm-final" class="premium-input" value="47.35" step="0.1" min="0" oninput="runLapdnCalculation()">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lapdn-rainfall" style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Simulated Post-Exposure Rainfall (mm):</label>
+                                    <input type="number" id="lapdn-rainfall" class="premium-input" value="25" step="5" min="0" oninput="runLapdnCalculation()">
+                                </div>
+                            </div>
+                            <div class="tool-outputs-display" style="background: rgba(0,0,0,0.25); padding: 1.5rem; border-radius: 8px; display: flex; flex-direction: column; gap: 1rem; border: 1px solid rgba(255,255,255,0.03);">
+                                <h3 style="font-family: var(--font-heading); font-size: 1.1rem; color: #ffffff;">Calculation Results</h3>
+                                <div class="metric-display-block">
+                                    <span class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Calculated Leaf Area (Total)</span>
+                                    <div class="metric-large-val"><span id="lapdn-out-area">1263.60</span> <span class="unit" style="font-size: 1rem; font-weight: 400; color: var(--text-muted);">cm²</span></div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div class="result-box glow-amber">
+                                        <span class="result-label">SPM Density</span>
+                                        <div class="result-number"><span id="lapdn-out-spm">2.61</span> <span class="unit">µg/cm²</span></div>
+                                    </div>
+                                    <div class="result-box glow-cyan">
+                                        <span class="result-label">WPM Density</span>
+                                        <div class="result-number"><span id="lapdn-out-wpm">0.87</span> <span class="unit">µg/cm²</span></div>
+                                    </div>
+                                </div>
+                                <div class="metric-display-block" style="padding: 0.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+                                    <span class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">SPM-to-WPM Partitioning Ratio</span>
+                                    <div class="metric-val"><span id="lapdn-out-ratio">3.00</span></div>
+                                </div>
+                                <div class="alert-box alert-warning" id="lapdn-rain-effects">
+                                    <p>Loading rainfall simulation results...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tool Panel 2: FDSPRP -->
+                    <div class="tool-panel" id="tool-panel-fdsprp" style="display: none;">
+                        <div class="tool-grid" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem;">
+                            <div class="tool-inputs" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                <h3 style="font-family: var(--font-heading); font-size: 1.1rem; color: #ffffff;">Foliar Dust Stress & Photosynthetic Resilience</h3>
+                                <div class="form-group">
+                                    <label for="fdsprp-species" style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Target Greening Species:</label>
+                                    <select id="fdsprp-species" class="premium-select" style="width: 100%; min-width: unset;" onchange="runFdsprpCalculation()">
+                                        <option value="alstonia">Alstonia scholaris (Highly Sensitive)</option>
+                                        <option value="polyalthia">Polyalthia longifolia (Highly Sensitive)</option>
+                                        <option value="morus">Morus alba (Moderate Resilience)</option>
+                                        <option value="ficus_benjamina">Ficus benjamina (High Resilience)</option>
+                                        <option value="ficus_religiosa">Ficus religiosa (Highly Resilient)</option>
+                                        <option value="eucalyptus">Eucalyptus globulus (Highly Resilient)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fdsprp-dust" style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Foliar Dust Load (mg/cm²):</label>
+                                    <input type="range" id="fdsprp-dust" min="0" max="5.0" step="0.1" value="1.5" class="premium-slider" oninput="runFdsprpCalculation()">
+                                    <div style="display: flex; justify-content: space-between; font-size: 10px; opacity: 0.5; margin-top: 0.25rem;">
+                                        <span>0.0 (Clean)</span>
+                                        <span>2.5 (High Roadside)</span>
+                                        <span>5.0 (Extreme Soot)</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fdsprp-days" style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Dry Days Since Last Rain:</label>
+                                    <input type="range" id="fdsprp-days" min="0" max="90" step="1" value="15" class="premium-slider" oninput="runFdsprpCalculation()">
+                                    <div style="display: flex; justify-content: space-between; font-size: 10px; opacity: 0.5; margin-top: 0.25rem;">
+                                        <span>0 days (Fresh rain)</span>
+                                        <span>30 days (Monsoon Break)</span>
+                                        <span>90 days (Drought)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tool-outputs-display" style="background: rgba(0,0,0,0.25); padding: 1.5rem; border-radius: 8px; display: flex; flex-direction: column; gap: 1rem; border: 1px solid rgba(255,255,255,0.03);">
+                                <h3 style="font-family: var(--font-heading); font-size: 1.1rem; color: #ffffff;">Predicted Physiological State</h3>
+                                <div class="metric-display-block">
+                                    <span class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Predicted Health Status</span>
+                                    <div class="metric-val" id="fdsprp-out-status" style="font-size: 1.35rem; font-weight: 700; margin-top: 0.25rem; color: #ffffff;">Healthy / Resilient</div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div class="result-box glow-emerald">
+                                        <span class="result-label">Chlorophyll Retention</span>
+                                        <div class="result-number"><span id="fdsprp-out-chl">88.50</span> <span class="unit">%</span></div>
+                                    </div>
+                                    <div class="result-box glow-violet">
+                                        <span class="result-label">Stomatal Clogging</span>
+                                        <div class="result-number"><span id="fdsprp-out-stoma">22.40</span> <span class="unit">%</span></div>
+                                    </div>
+                                </div>
+                                <div class="metric-display-block">
+                                    <span class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Net Photosynthetic Suppression</span>
+                                    <div class="metric-large-val" id="fdsprp-out-photo-block" style="color: #ff7675;"><span id="fdsprp-out-photo">31.30</span> <span class="unit">%</span></div>
+                                </div>
+                                <div class="alert-box" id="fdsprp-out-warning" style="font-size: 11px;">
+                                    <p>Loading warning status...</p>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+
+                      <!-- Tool Panel 3: LLDTLS -->
+                      <div class="tool-panel" id="tool-panel-lldtls" style="display: none;">
+                          <div class="tool-grid" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem;">
+                              <div class="tool-inputs" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                                  <h3 style="font-family: var(--font-heading); font-size: 1.1rem; color: #ffffff;">Leaf Litter Decomposition & Toxin Leaching</h3>
+                                  <div class="form-group">
+                                      <label for="lldtls-species" style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Forest Litter Species Profile:</label>
+                                      <select id="lldtls-species" class="premium-select" style="width: 100%; min-width: unset;" onchange="runLldtlsCalculation()">
+                                          <option value="quercus">Quercus robur (Oak - Lignin:N = 35)</option>
+                                          <option value="pinus">Pinus sylvestris (Scots Pine - Lignin:N = 45)</option>
+                                          <option value="fagus">Fagus sylvatica (Beech - Lignin:N = 30)</option>
+                                          <option value="taxus">Taxus baccata (Yew - Lignin:N = 40)</option>
+                                          <option value="chamaecyparis">Chamaecyparis lawsoniana (Cedar - Lignin:N = 38)</option>
+                                      </select>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="lldtls-temp" style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Mean Air Temperature (°C):</label>
+                                      <input type="range" id="lldtls-temp" min="-5" max="45" step="1" value="28" class="premium-slider" oninput="runLldtlsCalculation()">
+                                      <div style="display: flex; justify-content: space-between; font-size: 10px; opacity: 0.5; margin-top: 0.25rem;">
+                                          <span>-5°C (Freezing)</span>
+                                          <span>28°C (Kolkata Normal)</span>
+                                          <span>45°C (Extreme Heat)</span>
+                                      </div>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="lldtls-rain" style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Monthly Precipitation (mm):</label>
+                                      <input type="range" id="lldtls-rain" min="0" max="600" step="10" value="250" class="premium-slider" oninput="runLldtlsCalculation()">
+                                      <div style="display: flex; justify-content: space-between; font-size: 10px; opacity: 0.5; margin-top: 0.25rem;">
+                                          <span>0 mm (Dry)</span>
+                                          <span>250 mm (Monsoon Normal)</span>
+                                          <span>600 mm (Extreme Monsoon)</span>
+                                      </div>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="lldtls-time" style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Exposure Time Horizon (Months):</label>
+                                      <input type="range" id="lldtls-time" min="0" max="36" step="1" value="12" class="premium-slider" oninput="runLldtlsCalculation()">
+                                      <div style="display: flex; justify-content: space-between; font-size: 10px; opacity: 0.5; margin-top: 0.25rem;">
+                                          <span>0 months</span>
+                                          <span>12 months (1 year)</span>
+                                          <span>36 months (3 years)</span>
+                                      </div>
+                                  </div>
+                                  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+                                      <div class="form-group">
+                                          <label for="lldtls-lmw" style="font-size: 0.75rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Initial LMW PAH (ng/g):</label>
+                                          <input type="number" id="lldtls-lmw" class="premium-input" value="287" min="0" oninput="runLldtlsCalculation()" style="padding: 0.4rem 0.6rem;">
+                                      </div>
+                                      <div class="form-group">
+                                          <label for="lldtls-hmw" style="font-size: 0.75rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Initial HMW PAH (ng/g):</label>
+                                          <input type="number" id="lldtls-hmw" class="premium-input" value="447" min="0" oninput="runLldtlsCalculation()" style="padding: 0.4rem 0.6rem;">
+                                      </div>
+                                      <div class="form-group">
+                                          <label for="lldtls-pcb" style="font-size: 0.75rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Initial PCB (ng/g):</label>
+                                          <input type="number" id="lldtls-pcb" class="premium-input" value="61" min="0" oninput="runLldtlsCalculation()" style="padding: 0.4rem 0.6rem;">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="tool-outputs-display" style="background: rgba(0,0,0,0.25); padding: 1.5rem; border-radius: 8px; display: flex; flex-direction: column; gap: 1rem; border: 1px solid rgba(255,255,255,0.03);">
+                                  <h3 style="font-family: var(--font-heading); font-size: 1.1rem; color: #ffffff;">Simulation Leaching Dynamics</h3>
+                                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                      <div class="result-box glow-emerald">
+                                          <span class="result-label">Litter Mass Remaining</span>
+                                          <div class="result-number"><span id="lldtls-out-mass">60.50</span> <span class="unit">%</span></div>
+                                      </div>
+                                      <div class="result-box glow-violet">
+                                          <span class="result-label">Litter Mass Decomposed</span>
+                                          <div class="result-number"><span id="lldtls-out-decomp">39.50</span> <span class="unit">%</span></div>
+                                      </div>
+                                  </div>
+                                  <div style="margin-top: 0.5rem;">
+                                      <h4 style="font-family: var(--font-heading); font-size: 0.95rem; color: #ffffff;">Leached vs. Remaining Organic Toxins (ng/g equivalent)</h4>
+                                      <table class="premium-table" style="width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 0.5rem; text-align: left;">
+                                          <thead>
+                                              <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); opacity: 0.7;">
+                                                  <th style="padding: 4px;">Toxin Class</th>
+                                                  <th style="padding: 4px;">Leached (Runoff)</th>
+                                                  <th style="padding: 4px;">Remaining (Litter)</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody>
+                                              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                                  <td style="padding: 4px; font-weight: 600; color: var(--text-secondary);">LMW PAHs</td>
+                                                  <td style="padding: 4px; color: #ff7675; font-weight: 700;" id="lldtls-out-lmw-l">180.20</td>
+                                                  <td style="padding: 4px; color: #55efc4; font-weight: 700;" id="lldtls-out-lmw-r">106.80</td>
+                                              </tr>
+                                              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                                  <td style="padding: 4px; font-weight: 600; color: var(--text-secondary);">HMW PAHs</td>
+                                                  <td style="padding: 4px; color: #ff7675; font-weight: 700;" id="lldtls-out-hmw-l">22.40</td>
+                                                  <td style="padding: 4px; color: #55efc4; font-weight: 700;" id="lldtls-out-hmw-r">425.10</td>
+                                              </tr>
+                                              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                                  <td style="padding: 4px; font-weight: 600; color: var(--text-secondary);">PCBs</td>
+                                                  <td style="padding: 4px; color: #ff7675; font-weight: 700;" id="lldtls-out-pcb-l">3.10</td>
+                                                  <td style="padding: 4px; color: #55efc4; font-weight: 700;" id="lldtls-out-pcb-r">58.70</td>
+                                              </tr>
+                                              <tr>
+                                                  <td style="padding: 4px; font-weight: 700; color: var(--text-primary);">Runoff TEQ</td>
+                                                  <td style="padding: 4px; font-weight: 700; color: #ffeaa7;" id="lldtls-out-teq-l">2.41 ng/g</td>
+                                                  <td style="padding: 4px; font-weight: 700; color: #ffeaa7;" id="lldtls-out-teq-r">42.87 ng/g</td>
+                                              </tr>
+                                          </tbody>
+                                      </table>
+                                  </div>
+                                  <div class="alert-box" id="lldtls-out-warning" style="font-size: 11px;">
+                                      <p>Loading runoff risk status...</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section>
+
+        <!-- FULL REPORT TAB -->
+        <section id="tab-content-report" class="tab-panel print-report-container">
+            <div class="report-paper">
+                <div class="report-header">
+                    <h1 class="report-title">PROJECT REPORT<br>Comparison of particulate matter monitoring potential of some established plant bio-monitors</h1>
+                    <div class="report-author-details">
+                        <p class="author"><strong>AUTHOR:</strong> SOURISH SENAPATI [ORCID 0009-0000-8799-4340]</p>
+                        <p class="institution"><strong>INSTITUTION:</strong> Jadavpur University (JU)</p>
+                        <p class="date"><strong>DATE:</strong> May 26, 2026</p>
+                    </div>
+                </div>
+
+                <div class="report-section font-serif">
+                    <h2 class="section-title">ACKNOWLEDGEMENT</h2>
+                    <p>This methodology rests entirely on the foundational environmental telemetry and gravimetric extraction frameworks developed over the last decade. I must explicitly recognize the prior field trials conducted by Saebo, Xu, Li, and Sgrigna, whose initial aerodynamic and scanning electron microscopy (SEM) evaluations provided the raw baseline data synthesized here. This project is engineered to meet the strict analytical standards required at Jadavpur University. There is no room for theoretical abstraction; every variable, extraction limit, and species-specific capacity evaluated in this framework is anchored in empirical reality.</p>
+                </div>
+
+                <div class="report-section font-serif">
+                    <h2 class="section-title">1. Introduction</h2>
+                    <p>The progressive intensification of urbanization, fossil fuel combustion, and industrial expansion has precipitated a severe degradation of global atmospheric quality. At the absolute core of this environmental crisis is airborne Particulate Matter (PM), functioning as a primary mechanism for both ecosystem instability and a massive global burden of respiratory and cardiovascular disease.</p>
+                    
+                    <h3>1.1. Physical Characteristics and Classifications of PM</h3>
+                    <p>Particulate Matter, colloquially categorized as particle pollution, is an operationally defined scientific term for a highly complex, heterogeneous mixture of solid particles and liquid droplets suspended within the atmospheric column (US EPA, 2023). The physical dimensions of these suspended entities vary exponentially. Certain macroscopic elements, such as wind-blown dirt, combustion soot, and construction dust, possess sufficient mass and circumference to be visually detected by the naked eye. Conversely, the vast majority of suspended particles are entirely microscopic, requiring advanced electron microscopy for structural detection.</p>
+                    <p>To standardize environmental regulation and toxicological risk assessment, atmospheric particles are universally classified by their aerodynamic diameters:</p>
+                    <ul>
+                        <li><strong>PM₁₀:</strong> Coarse inhalable particles characterized by aerodynamic diameters generally equal to or less than 10 micrometers (µm).</li>
+                        <li><strong>PM₂.₅:</strong> Fine inhalable particles characterized by aerodynamic diameters generally equal to or less than 2.5 µm.</li>
+                    </ul>
+
+                    <h3>1.2. Primary and Secondary Emission Origins</h3>
+                    <p>These pollutants enter our local environments through two very different physical pathways. Primary particles are ejected directly from a specific geographic origin into the air. Daily industrial activities, traffic across unpaved roads, large-scale construction zones, agricultural clearing, and direct exhaust from open fires or industrial smokestacks all contribute heavily to direct primary particulate loading.</p>
+                    <p>However, the overwhelming majority of fine particulate loads actually function as secondary particles. These microscopic fragments do not emerge physically complete from a local smokestack. Instead, they form through complex photochemical reactions in the open atmosphere. Gaseous precursors, specifically sulphur dioxide (SO₂) and nitrogen oxides (NOₓ) emitted heavily by municipal power plants and internal combustion vehicle engines, react with sunlight and atmospheric moisture to precipitate outward into solid sulphates and liquid chemical droplets.</p>
+
+                    <h3>1.3. Health and Environmental Pathogenesis</h3>
+                    <p>The extraordinarily small size of these particles directly determines their lethality. Extensive epidemiological reports from the World Health Organization currently attribute millions of premature global deaths strictly to conditions induced by systemic PM exposure (WHO, 2023). While the human body naturally traps large environmental dust in the upper airway, these microscopic pollutants easily evade our innate respiratory defences. Inhaled PM₁₀ fragments travel deep into the lower lungs, physically irritating pulmonary tissue and significantly worsening established respiratory conditions like chronic obstructive pulmonary disease.</p>
+                    <p>Fine particles (PM₂.₅) present a much more severe systemic physiological threat. Their minute size allows them to effortlessly cross the alveolar barrier within the lungs and slip directly into the human circulatory system (US EPA, 2023). Once circulating actively in the bloodstream, these fragments trigger widespread vascular inflammation and intense cellular stress throughout the body. This internal degradation acts as a direct catalyst for critical cardiovascular events, drastically inflating the clinical risk of ischemic heart disease, strokes, and fatal cardiac arrhythmias. Beyond this devastating physiological cost, highly concentrated fine particles are absolutely responsible for severe environmental haze. This persistent visual pollution deeply diminishes functional visibility across urban commercial centres and profoundly degrades the natural condition of treasured national parks and protected wilderness preserves.</p>
+                    <p>The severity of particulate matter loading is intensely localized, and current empirical data places the Indian subcontinent at the absolute epicentre of the crisis. According to the 2024 IQAir World Air Quality Report, India recorded an annual average PM₂.₅ concentration of 50.6 µg/m³. This extreme baseline represents an atmospheric load more than ten times higher than the World Health Organization’s strict annual safety guideline, which caps safe continuous exposure at merely 5 µg/m³ (WHO, 2023).</p>
+                    <p>Currently, essentially the entire Indian population resides in geographic districts where baseline annual particulate levels drastically exceed these international safety thresholds. The public health burden generated by this severe exposure is devastating. Recent verified data aggregated in <em>The Lancet Planetary Health</em> directly links fine particulate air pollution to approximately 1.7 million premature deaths annually across India. The empirical data explicitly highlights that for every 10 µg/m³ increase in localized PM₂.₅ concentration, corresponding municipal mortality rates surge by an estimated 8.6%, functioning as a massive suppressant on total national life expectancy.</p>
+                </div>
+
+                <div class="report-section font-serif">
+                    <h2 class="section-title">2. Plant Bio-Monitors</h2>
+                    <p>The progressive intensification of urbanization and industrial activity has precipitated a widespread degradation of atmospheric quality, situating airborne particulate matter (PM) as a primary vector for respiratory pathogenesis and ecosystem instability (WHO, 2005). Conventional physicochemical protocols for measuring atmospheric PM and its associated trace metals rely fundamentally on localized, mechanical telemetric sensor networks. While these technical instruments yield high-resolution, temporally precise data, their operational utility is frequently compromised by high deployment costs, restricted spatial interpolation, and an intrinsic inability to quantify the physiological impact of cumulative, synergistic pollutant exposure on biological systems. Consequently, environmental monitoring methodologies have increasingly integrated Phyto-monitoring—the systematic utilization of native and deployed vegetation as passive atmospheric sinks—to capture highly resolved, spatially continuous pollution gradients (Amaral et al., 2025).</p>
+                    <p>At the foundational level, biomonitoring utilizes specific flora, fauna, or microbial communities to assess ecosystem integrity and detect biogeochemical perturbations. Distinguishing itself from mechanical instrumentation that captures discrete, instantaneous atmospheric snapshots, biomonitoring provides integrated, quantitative data reflecting the cumulative and synergistic physiological impacts of multiple environmental stressors over extended chronological scales (Parmar et al., 2016). In the context of atmospheric PM, terrestrial flora function as highly effective bioindicators; their immobility necessitates constant physiological equilibrium with their microclimate, organically converting the plant biomass into a continuous passive sampler. By analysing species-specific tissue for the accumulation of chemical markers, researchers can reconstruct localized atmospheric contamination histories and execute robust spatial source apportionment without the capital constraints of large-scale mechanical sensor arrays (Amaral et al., 2025).</p>
+                    <p>The aerodynamic interception and subsequent retention of PM are physically governed by the target species' morphological architecture. Historically, non-vascular cryptogams such as lichens and bryophytes have served as the foundational standard for atmospheric heavy metal assessment. Lacking subterranean root systems and protective epicuticular waxes, these species depend almost exclusively on ambient atmospheric deposition for nutritional sustenance. This profound physiological exposure, coupled with exceptionally high surface-area-to-volume ratios, renders them highly efficient, passive substrates for aerosol entrapment. For example, Parmar et al. (2016) detail field applications utilizing the moss <em>Hylocomium splendens</em> to quantitatively trace heavy zinc ore plumes across a 75 km transport corridor. Tissue assays confirmed that heavy metal PM concentrations strictly correlated with spatial proximity to the mechanical emission source, validating the species' capacity to reliably map fugitive industrial dust. Similarly, the localized absence of lichen has long functioned as a definitive diagnostic biomarker for elevated atmospheric sulfur dioxide (SO₂) and nitrogenous trace pollutants (Walsh, 1978).</p>
+                    <p>Contemporary urban biomonitoring, however, relies increasingly on vascular evergreens to act as active multidirectional filtration infrastructure. For complex macrophytes, macroscopic canopy architecture directly dictates initial PM interception efficiency. Coniferous taxa consistently outperform broad-leaved species due to the extreme surface roughness and topological complexity of their needle matrices, which effectively perturb laminar airflow envelopes to induce particulate impaction (Freer-Smith et al., 2003). Longitudinal field arrays emphasize this physiological divergence: under equivalent roadside exposure, the dense geometry of Scots pine (<em>Pinus sylvestris</em>) accumulated capacities up to 417.6 µg cm⁻² of foliar PM, significantly exceeding the smooth, planar canopy limits of common ivy (<em>Hedera helix</em>, maximum 140.6 µg cm⁻²) (Przybysz et al., 2014).</p>
+                    <p>Furthermore, the analytical fidelity of a vascular bio-monitor is mediated by its capacity to permanently immobilize intercepted particulates against hydraulic erosion from precipitation. This retention depends entirely on the epicuticular wax layer, which mechanically partitions accumulated mass into vulnerable, surface-deposited particulate matter (SPM) and permanently wax-embedded particulate matter (WPM). Scots pine foliage extrudes massive epicuticular wax volumes (up to 715.6 µg cm⁻²), forming a viscous matrix capable of deeply embedding incoming aerosolized PM. Conversely, taxa with minimal cuticular extrusion, such as <em>H. helix</em> (maximum 45.2 µg cm⁻²), experience rapid cuticular saturation, rendering surface-bound PM highly susceptible to subsequent rainfall wash-off. Critically, cuticular embedding functions as a permanent, size-selective barrier: heavy precipitation routinely strips 30% to 41% of coarse and large particles (10–100 µm), while the toxicologically critical fine fraction (0.2–2.5 µm) bypasses hydraulic shear entirely, remaining deeply sequestered within the wax (Przybysz et al., 2014). This dynamic establishes heavy-wax species as unparalleled bioindicators for mapping long-term ambient fine particulate exposure.</p>
+                </div>
+
+                <div class="report-section font-serif">
+                    <h2 class="section-title">3. Literature Review</h2>
+                    
+                    <h3>3.1. Study 1: Plant species differences in particulate matter accumulation on leaf surfaces (Saebo et al., 2012)</h3>
+                    <p><strong>Background & Methodology:</strong> Over two complete growing seasons, Saebo et al. (2012) evaluated a diverse cohort of 47 widely used woody taxa (22 trees and 25 shrubs) distributed in Norway (Stavanger, traffic motorway site) and Poland (rural nursery). Gravimetric rinsing differentiated loosely deposited surface PM (SPM) from wax-embedded PM (WPM) across three size boundaries: large (PM10), fine (PM2.5), and ultrafine (PM0.2).</p>
+                    <p><strong>Key Results & Regression Statistics:</strong> K-means clustering isolated three distinct accumulation tiers. High accumulators included <em>Pinus mugo, Pinus sylvestris, Betula pendula, Salix cinerea, Skimmia japonica,</em> and <em>Stephanandra incisa</em> with gross loads of 24–55 µg/cm². Low accumulators (e.g., <em>Acer platanoides, Prunus avium, Tilia cordata</em>) remained trapped between 6–13 µg/cm².</p>
+                    <p>Partial regression coefficients (β) proved that total epicuticular wax volume was the single most powerful predictor for fine and ultrafine particles, driving Total PM (β = 0.66, p = 0.000) and PM0.2 (β = 0.78, p = 0.000, R² = 0.55). In contrast, foliar trichome (hair) density was effective for larger classes (PM2.5 β = 0.45, p = 0.035) but proved statistically void for PM0.2 (β = 0.20, p = 0.185). Specific Leaf Area (SLA) maintained a strong negative correlation (β = -0.34 to -0.36, p = 0.002), confirming that thick, dense foliage (like needles) is aerodynamically superior to thin papery leaf surfaces.</p>
+
+                    <h3>3.2. Study 2: Particulate matter deposition on roadside plants and leaf trait combinations (Leonard et al., 2016)</h3>
+                    <p><strong>Background & Methodology:</strong> Conducted across 8 roadside locations in Sydney, Australia, evaluating 16 native taxa. This study measured loosely bound surface PM (SPM) using a 60-second mechanical water wash. The results confirmed that leaf shape heavily drives deposition (p &lt; 0.001), with lanceolate foliage outperforming linear, elliptic, and needle-like profiles. This is due to aerodynamic drag dynamics: lanceolate leaves avoid high-frequency wind fluttering which would otherwise shake particles free before permanent wax embedding occurs.</p>
+                    <p><strong>Key Results & Regression Statistics:</strong> Traffic-associated heavy metal accumulation (Cu, Cr, Mn, Al, Fe) was mapped on <em>Acacia parramattensis</em> and <em>Acacia longifolia</em>. <em>A. parramattensis</em> retained significantly higher Chromium (0.51 ± 0.11 mg/kg) compared to <em>A. longifolia</em> (0.09 ± 0.04 mg/kg). Crucially, the leaves trapped massive concentrations of elemental Aluminium (249–300 mg/kg) and Iron (16–63 mg/kg), which serve as soil minerals, confirming that road dust resuspension is the primary local PM contributor rather than direct tailpipe soot.</p>
+
+                    <h3>3.3. Study 3: A systematic review of leaf traits contributing to PM removal (Corada et al., 2021)</h3>
+                    <p><strong>Background & Findings:</strong> This systematic meta-review compiled global findings from 62 empirical studies (predominantly in China and the UK) to establish leaf-trait design criteria. While waxy, warty cuticles, trichomes, and coniferous structures are consistently correlated with high capture metrics, the study highlights a profound lack of consensus in isolating a single primary trait due to widespread research fragmentation, varying baseline PM levels, and diverse sampling techniques. Planners are advised to adopt holistic trait combinations matched precisely to local microclimates rather than relying on a single taxonomic metric.</p>
+
+                    <h3>3.4. Study 4: Deposition of particulate matter of different size fractions on leaf surfaces and in waxes of urban forest species (Dzierżanowski et al., 2011)</h3>
+                    <p><strong>Background & Methodology:</strong> Conducted along high-traffic corridors in Warsaw, Poland, evaluating 8 species (4 trees, 3 shrubs, and 1 climber). This study established the sequential gravimetric extraction protocol (water agitation for SPM, chloroform rinse for WPM) to isolate large (10-100 µm), coarse (2.5-10 µm), and fine (0.2-2.5 µm) particles.</p>
+                    <p><strong>Key Results & Sequestration:</strong> Shrubs, particularly <em>Spiraea japonica</em>, accumulated the highest total PM load (up to 45.2 µg/cm²), while <em>Platanus x hispanica</em> was the least effective. Toxic fine particles were highly concentrated within the epicuticular wax layer (WPM) rather than the surface (SPM), demonstrating that wax quality and chemical composition dictate long-term sequestration efficiency.</p>
+
+                    <h3>3.5. Study 5: Accumulation of particulate matter and trace elements on vegetation as affected by pollution level, rainfall and the passage of time (Przybysz et al., 2014)</h3>
+                    <p><strong>Background & Methodology:</strong> This longitudinal study in Poland and Norway tracked PM and trace heavy metal (Pb, Cd, Cu, Zn) accumulation on <em>Pinus sylvestris</em> and <em>Hedera helix</em> before and after natural rainfall events.</p>
+                    <p><strong>Key Results & Rain Resistance:</strong> Under traffic exposure, <em>P. sylvestris</em> accumulated up to 417.6 µg/cm² of PM, far exceeding <em>H. helix</em> (140.6 µg/cm²). Conifers with thick waxes retained over 85% of their PM load against rainfall. Conversely, <em>H. helix</em>, with thin wax, lost up to 90% of surface PM. Rainfall washed off 30% to 41% of coarse surface particles, but wax-embedded fine particles were completely shielded from hydraulic shear.</p>
+
+                    <h3>3.6. Study 6: Bioindicators: the natural indicator of environmental pollution (Parmar et al., 2016)</h3>
+                    <p><strong>Background & Methodology:</strong> This comprehensive review synthesized global case studies on biological indicators, focusing on the use of non-vascular cryptogams (mosses and lichens) and vascular plant leaves for heavy metal and gaseous plume monitoring.</p>
+                    <p><strong>Key Results & Plume Mapping:</strong> Non-vascular cryptogams like the moss <em>Hylocomium splendens</em> serve as highly effective bioindicators because they lack roots and cuticles, absorbing nutrients and metals directly from the air. Tissue assays successfully mapped zinc ore plumes over a 75 km transport corridor, showing a strict spatial correlation with source proximity. Lichen deserts were validated as diagnostic biomarkers for elevated SO2 and NOx.</p>
+
+                    <h3>3.7. Study 7: Estimating the reduction of urban PM10 concentrations by trees within an environmental information system for planners (Bealey et al., 2007)</h3>
+                    <p><strong>Background & Methodology:</strong> The authors developed a GIS-based deposition velocity (Vd) model applied to the West Midlands conurbation, UK. The model integrated meteorology, atmospheric chemistry, and canopy structures to compare coniferous evergreens and deciduous trees.</p>
+                    <p><strong>Key Results & Canopy Modeling:</strong> Conifers exhibited deposition velocities up to three times higher than deciduous species, driven by needle roughness, dense needle packing, and year-round retention. The model estimated that increasing canopy cover by 25% would reduce ambient PM10 concentrations by 2% to 10%, averting hundreds of respiratory hospitalizations.</p>
+
+                    <h3>3.8. Study 8: Air pollution removal by urban trees and shrubs in the United States (Nowak et al., 2006)</h3>
+                    <p><strong>Background & Methodology:</strong> The Urban Forest Effects (UFORE) model was deployed nationwide across 55 US cities to calculate the annual dry deposition of O3, PM10, NO2, SO2, and CO based on canopy Leaf Area Index (LAI) and hourly meteorology.</p>
+                    <p><strong>Key Results & Ecosystem Services:</strong> Urban trees and shrubs in the US remove an estimated 711,000 metric tons of air pollutants annually, with PM10 representing the largest fraction (215,000 metric tons). While average local concentration reductions were modest (0.51%), local PM reductions in dense forest patches exceeded 10%.</p>
+
+                    <h3>3.9. Study 9: Vegetation-driven and passive monitoring of urban particulate matter: Comparative field assessment in Fukuoka, Japan (Hammad et al., 2026)</h3>
+                    <p><strong>Background & Methodology:</strong> Conducted in Fukuoka, Japan, this field study compared PM interception of evergreens and deciduous species (including <em>Elaeagnus pungens</em>) against Ferm-type passive samplers using sequential extraction, gravimetric, and SEM analysis.</p>
+                    <p><strong>Key Results & Stability:</strong> Foliar PM capture was driven by micromorphological traits (epidermal grooves, margins, and hairs) rather than raw leaf area. Passive physical samplers displayed higher stability and smaller fraction enrichment, while plants acted as dynamic sensors reflecting both deposition and meteorological wash-off cycles.</p>
+
+                    <h3>3.10. Study 10: A green, fast protocol to estimate microfiber accumulation in Pittosporum tobira (Gaglione et al., 2026)</h3>
+                    <p><strong>Background & Methodology:</strong> Investigated the accumulation of airborne anthropogenic microfibers (MFs) on <em>Pittosporum tobira</em> leaves across Naples, Italy. A fast adhesive tape-tearing protocol on 1g leaf samples was used to isolate and count MFs under stereomicroscopy, comparing summer and winter seasons and sheltered vs. unsheltered transplants.</p>
+                    <p><strong>Key Results & Seasonal Wash-off:</strong> Summer MF counts reflected land-use gradients (industrial: 160, urban: 84–125, green: 48–54 MFs/g). Dry seasons maximized microfiber retention, whereas winter rains washed them away. The development of glandular hairs in summer enhanced MF adhesion, warning that monsoon seasons in Kolkata will experience severe wash-off.</p>
+
+                    <h3>3.11. Study 11: Responses of tree defoliators to traffic-derived particulate matter and trace elements along roadside gradients (Moniuszko et al., 2026)</h3>
+                    <p><strong>Background & Methodology:</strong> Rearing trials evaluated the moth larvae <em>Yponomeuta padella</em> fed on <em>Crataegus monogyna</em> and <em>Prunus cerasifera</em> leaves collected along roadside pollution gradients in Warsaw, Poland. PM load, leaf toughness, SLA, and trace metals (Cu, Fe, Sr) were analyzed.</p>
+                    <p><strong>Key Results & Ecological Toxicity:</strong> Roadside diet toxicity significantly delayed larval growth, reduced adult body mass, and collapsed eclosion success from 90.1% (control) to 77.1% (roadside). Choice tests showed strong larval avoidance of contaminated foliage, demonstrating that roadside PM filters carry severe ecological costs for herbivorous food webs.</p>
+
+                    <h3>3.12. Study 12: Molecular and Environmental Elucidation of Heavy Metal Transfer in Tilia spp. (Motiu et al., 2026)</h3>
+                    <p><strong>Background & Methodology:</strong> Analyzed the transfer of twelve elements (Pb, Cd, Zn, Cu, Ni, Cr, Mn, Co, As, Hg, Al, V) in soil, bark, leaves, flowers, and herbal flower infusions of linden trees (<em>Tilia</em> spp.) along urban-forest gradients in Romania, modeling estimated daily intake (EDI).</p>
+                    <p><strong>Key Results & Infusion Transfer:</strong> Urban Tilia trees acted as robust bioindicators. Elements like Al, Cr, and Ni showed high infusion extraction rates (>80%), while Zn and Cu were low (<10%). Although young children represent the most vulnerable demographic due to lower body mass, linden teas remain safe under realistic intake.</p>
+
+                    <h3>3.13. Study 13: Context-dependent dominance: Pollution sources vs. tree species in shaping leaf-deposited PM characteristics (Xue et al., 2026)</h3>
+                    <p><strong>Background & Methodology:</strong> Back-propagation neural network (BP-NN) modeling was used for source apportionment of foliar PM (carbonaceous EC/OC, ions, and metals) extracted from <em>Cinnamomum camphora</em> and <em>Sabina chinensis</em> leaves across industrial, traffic, residential, and agricultural zones in Shanghai, China.</p>
+                    <p><strong>Key Results & Trait Dominance limits:</strong> In high-pollution zones, pollution source signatures completely overrode species traits, depositing uniform EC/OC profiles on disparate trees. Species traits only dictated PM chemical characteristics in low-pollution zones. This suggests that in Kolkata's high-pollution corridors, source signatures will dominate leaf PM profiles, though traits still control total mass capacity.</p>
+
+                    <h3>3.14. Study 14: Physiochemical screening of road avenue plants in Lahore, Pakistan (Munam et al., 2025)</h3>
+                    <p><strong>Background & Methodology:</strong> Evaluated dust loads and physiological parameters (chlorophyll, carotenoids, photosynthetic rate, stomatal conductance) in 12 avenue plant species along 7 busy corridors in Lahore, one of the world's most polluted cities.</p>
+                    <p><strong>Key Results & Tolerance rankings:</strong> Leaves of <em>Alstonia scholaris</em>, <em>Ficus religiosa</em>, and <em>Morus alba</em> captured the highest dust loads (0.02 g/cm²). However, <em>A. scholaris</em> and <em>Polyalthia longifolia</em> suffered severe chlorophyll reduction and photosynthetic suppression. <em>Eucalyptus globulus</em> and <em>F. religiosa</em> showed extreme tolerance and chlorophyll retention, making them ideal high-stress bio-filters.</p>
+
+                    <h3>3.15. Study 15: Quantitative source-oriented, bioaccumulation and toxicity of organic pollutants in formerly mining area (Nechita et al., 2026)</h3>
+                    <p><strong>Background & Methodology:</strong> Assessed 14 PCBs and 15 PAHs in soils, litter, and leaves of native and introduced trees (<em>Quercus robur, Fagus sylvatica, Pinus sylvestris, Taxus baccata, Chamaecyparis lawsoniana</em>) near an ore furnace in Baia Sprie, Romania. MAE extraction, UHPLC-FLD (PAHs), and GC-ECD (PCBs) were used to model BAF and toxic equivalency (TEQ).</p>
+                    <p><strong>Key Results & Bioaccumulation:</strong> PAHs decreased with soil depth (litter: 287 to deep soil: 9.07 ng/g), while PCBs increased with depth (litter: 61.76 to deep soil: 92.67 ng/g). <em>C. lawsoniana</em> and <em>Q. robur</em> leaf accumulation was highest (PCB BAF up to 45.58 in C. lawsoniana). TEQ modeling indicated moderate-to-high carcinogenic risk in <em>Q. robur</em> leaves (10.45 ng/g) and extreme risk in litter (71.55 ng/g) due to carcinogenic BaA, BbF, and BaP. Decaying litter acts as a major toxin repository, suggesting that fallen leaf litter from highly contaminated corridors must be treated as hazardous waste to prevent leaching.</p>
+                </div>
+
+<div class="report-section font-serif">
+                    <h2 class="section-title">4. Conclusion & Strategic Guidelines</h2>
+                    <p>Phyto-telemetry confirms that leaf traits act as the structural controllers of particulate air filtration. When planning urban green infrastructure to maximize environmental remediation:</p>
+                    <ol>
+                        <li><strong>For ground-level traffic filtration:</strong> Select low-growing, high-capacity shrubs like <em>Stephanandra incisa, Westringia fruticosa,</em> and <em>Pinus mugo</em>. These species capture road resuspension plumes directly at the emission source.</li>
+                        <li><strong>For upper airspace scrubbing:</strong> Select waxy evergreens and pioneer trees like <em>Pinus sylvestris</em> and <em>Betula pendula</em>. Their massive epicuticular wax layers permanently embed toxic sub-micron PM0.2, preventing weather-induced wash-off.</li>
+                        <li><strong>For high-rainfall urban districts:</strong> Avoid species with high surface-to-wax ratios (like <em>Fagus sylvatica</em> or <em>Hedera helix</em>) where PM resides primarily on the epidermis. Select heavy-wax species to secure long-term ambient particulate sequestration.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>&copy; 2026 Jadavpur University - Dept of Environmental Sciences. Developed for Phyto-telemetric Field Telemetry Research.</p>
+    </footer>
+
+    <!-- Script File -->
+    <script src="models.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "name": "@viridimetrics/pm-deposition-velocity",
+  "version": "1.0.0",
+  "description": "Canopy Deposition Velocity & Plume Mitigation Simulator for roadside PM filtration.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "biomonitoring",
+    "particulate-matter",
+    "deposition-velocity",
+    "plume-mitigation",
+    "green-infrastructure"
+  ],
+  "author": "Sourish Senapati <sourish.senapati@jadavpuruniversity.in>",
+  "license": "Proprietary",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

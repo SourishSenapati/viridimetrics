@@ -1,0 +1,23 @@
+{
+  "name": "@viridimetrics/hvac-filter-clog-energy",
+  "version": "1.0.0",
+  "description": "HVAC Filter Clogging & Fan Power Energy Predictor for pressure drop and fan power energy draw.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "hvac-filter",
+    "dust-loading",
+    "pressure-drop",
+    "fan-power",
+    "energy-overhead",
+    "smart-buildings"
+  ],
+  "author": "Sourish Senapati <sourish.senapati@jadavpuruniversity.in>",
+  "license": "Proprietary",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
