@@ -329,139 +329,386 @@ function runRegressionSimulation() {
     document.getElementById('reg-pm25').textContent = pm25.toFixed(2);
     document.getElementById('reg-pm02').textContent = pm02.toFixed(2);
 }
-// Literature database has been removed.
+// 8. SimCity Greenbelt & Air Quality Grid Simulator
+let activeTool = 'road';
+const gridRows = 6;
+const gridCols = 8;
+let gridMapState = [];
+let simWindSpeed = 2.0;
+let simAmbientPm = 120.0;
+let simRainfall = 150.0;
+let simAdjuvant = 'none';
 
-// Analytical Tools initialization and helper routines
+// Plant metadata properties for calculations
+const simPlantsDb = {
+    pine: { name: 'Scots Pine', sci: 'Pinus sylvestris', lai: 4.5, wax: 715.6, isPubescent: false, metalBcf: 0.15, ligninRatio: 45 },
+    birch: { name: 'Silver Birch', sci: 'Betula pendula', lai: 3.5, wax: 220.0, isPubescent: true, metalBcf: 0.42, ligninRatio: 30 },
+    ivy: { name: 'Common Ivy', sci: 'Hedera helix', lai: 4.0, wax: 45.2, isPubescent: false, metalBcf: 0.12, ligninRatio: 28 }
+};
 
-
-// 8. Municipal Planner Logic
-const speciesDatabase = [
-    {
-        name: "Scots Pine",
-        sci: "Pinus sylvestris",
-        canopy: "upper",
-        traffic: ["heavy", "moderate"],
-        rain: "high",
-        targetPm: ["ultrafine", "fine"],
-        advantage: "Extremely high epicuticular wax volume (715.6 µg/cm²). Needle bundle geometries create drag turbulence to capture fine particles and seal them internally as WPM.",
-        suitability: "Apex Upper-Canopy Monitor"
-    },
-    {
-        name: "Silver Birch",
-        sci: "Betula pendula",
-        canopy: "upper",
-        traffic: ["heavy", "moderate"],
-        rain: "high",
-        targetPm: ["fine", "coarse"],
-        advantage: "Top performing broadleaf species. Smooth lanceolate drag traits minimize leaf fluttering and promote stable long-term epicuticular PM encapsulation.",
-        suitability: "Best Deciduous Tree"
-    },
-    {
-        name: "Lace Shrub",
-        sci: "Stephanandra incisa",
-        canopy: "ground",
-        traffic: ["heavy", "moderate"],
-        rain: "high",
-        targetPm: ["coarse", "fine"],
-        advantage: "Low growth pattern acts as a primary filter for resuspended road dust directly at the roadside carriage. Topographical roughness rating is high (4/5).",
-        suitability: "Apex Roadside Shrub"
-    },
-    {
-        name: "Coast Banksia",
-        sci: "Banksia integrifolia",
-        canopy: "ground",
-        traffic: ["heavy"],
-        rain: "low",
-        targetPm: ["coarse"],
-        advantage: "Whorled foliage arrangement capturing large volumes of mineral markers (Al and Fe) under arid, dry dust conditions. Rigid geometry prevents particle shedding.",
-        suitability: "Best Arid Coarse Monitor"
-    },
-    {
-        name: "Coast Westringia",
-        sci: "Westringia fruticosa",
-        canopy: "ground",
-        traffic: ["heavy", "moderate"],
-        rain: "low",
-        targetPm: ["fine", "coarse"],
-        advantage: "Extremely high density of foliar trichomes (hairs) trapping large traffic soot aggregates before they can settle near pedestrian corridors.",
-        suitability: "Best Hairy Shrub"
-    },
-    {
-        name: "Dwarf Mountain Pine",
-        sci: "Pinus mugo",
-        canopy: "ground",
-        traffic: ["heavy", "moderate"],
-        rain: "high",
-        targetPm: ["ultrafine", "fine"],
-        advantage: "Shrubby coniferous architecture maintaining massive epicuticular wax quantities to trap sub-micron PM0.2 directly in the lower breathing zone.",
-        suitability: "Apex Lower-level Conifer"
-    },
-    {
-        name: "Parramatta Wattle",
-        sci: "Acacia parramattensis",
-        canopy: "upper",
-        traffic: ["industrial"],
-        rain: "low",
-        targetPm: ["fine"],
-        advantage: "Proven capability to accumulate toxic heavy metals, specifically Chromium (0.51 mg/kg) under roadside exposure. Deep cellular tolerances prevents metal toxicity.",
-        suitability: "Industrial Heavy Metal Monitor"
-    }
+// Initial/default zoning layout
+const defaultZoningLayout = [
+    ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+    ['industrial', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+    ['road', 'road', 'road', 'road', 'road', 'road', 'road', 'road'],
+    ['path', 'path', 'path', 'path', 'path', 'path', 'path', 'path'],
+    ['comm', 'empty', 'empty', 'comm', 'empty', 'empty', 'comm', 'empty'],
+    ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty']
 ];
 
-function runPlannerRecommendation() {
-    const canopy = document.getElementById('param-canopy').value;
-    const traffic = document.getElementById('param-traffic').value;
-    const rain = document.getElementById('param-rain').value;
-    const targetPm = document.getElementById('param-target-pm').value;
-
-    const container = document.getElementById('planner-recommendations-list');
-    container.innerHTML = '';
-
-    // Scoring and filtering algorithm
-    const scoredSpecies = speciesDatabase.map(spec => {
-        let score = 0;
-        
-        // Exact canopy match is a prerequisite or heavily weighted
-        if (spec.canopy === canopy) score += 5;
-        
-        // Traffic profile support
-        if (spec.traffic.includes(traffic)) score += 3;
-        
-        // Rain wash-off resistance: high-wax pine is ideal for high rain
-        if (rain === 'high' && spec.name.includes("Pine")) score += 2;
-        if (rain === 'low' && (spec.name.includes("Banksia") || spec.name.includes("Westringia"))) score += 2;
-        
-        // Target particle match
-        if (spec.targetPm.includes(targetPm)) score += 3;
-
-        return { ...spec, score };
-    });
-
-    // Sort by score and display top 3 matches
-    const recommendations = scoredSpecies
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 3);
-
-    recommendations.forEach(rec => {
-        const card = document.createElement('div');
-        card.classList.add('rec-card');
-        card.innerHTML = `
-            <div class="rec-card-header">
-                <h4>${rec.name} <span>(${rec.sci})</span></h4>
-                <span class="suitability-badge">${rec.suitability}</span>
-            </div>
-            <div class="rec-card-body">
-                <p>${rec.advantage}</p>
-            </div>
-            <div class="rec-card-footer">
-                <span class="rec-meta-item">Stratum: <strong>${rec.canopy === 'upper' ? 'Upper Canopy' : 'Ground/Shrub'}</strong></span>
-                <span class="rec-meta-item">Primary Target: <strong>${rec.targetPm.join(', ').toUpperCase()}</strong></span>
-                <span class="rec-meta-item">Sim Score: <strong>${rec.score} pts</strong></span>
-            </div>
-        `;
-        container.appendChild(card);
-    });
+function initSimGrid() {
+    gridMapState = [];
+    for (let r = 0; r < gridRows; r++) {
+        const row = [];
+        for (let c = 0; c < gridCols; c++) {
+            row.push({
+                type: defaultZoningLayout[r][c],
+                row: r,
+                col: c,
+                pmLevel: 20.0,
+                soilConc: 0.0 // starts clean
+            });
+        }
+        gridMapState.push(row);
+    }
+    renderSimGrid();
+    runSimCalculation();
 }
+
+function selectPaletteTool(toolId) {
+    activeTool = toolId;
+    document.querySelectorAll('.palette-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    const selectedBtn = document.getElementById(`palette-btn-${toolId}`);
+    if (selectedBtn) selectedBtn.classList.add('active');
+}
+
+function handleGridCellClick(row, col) {
+    const cell = gridMapState[row][col];
+    
+    // Prevent invalid combinations (e.g. green wall 'ivy' can only be placed on a building 'comm')
+    if (activeTool === 'ivy') {
+        if (cell.type !== 'comm' && cell.type !== 'ivy') {
+            alert("Green walls can only be planted on Building cells!");
+            return;
+        }
+        cell.type = 'ivy';
+    } else if (cell.type === 'ivy' && activeTool === 'clear') {
+        cell.type = 'comm'; // Bulldoze green wall back to building
+    } else if (activeTool === 'comm' && cell.type === 'ivy') {
+        // Do nothing, already has a building base
+    } else {
+        cell.type = activeTool === 'clear' ? 'empty' : activeTool;
+    }
+    
+    renderSimGrid();
+    runSimCalculation();
+}
+
+function updateSimParameters() {
+    simWindSpeed = parseFloat(document.getElementById('sim-wind').value) || 2.0;
+    simAmbientPm = parseFloat(document.getElementById('sim-ambient-pm').value) || 120.0;
+    simRainfall = parseFloat(document.getElementById('sim-rain').value) || 150.0;
+    
+    document.getElementById('sim-wind-val').textContent = simWindSpeed.toFixed(1) + ' m/s';
+    document.getElementById('sim-pm-val').textContent = simAmbientPm.toFixed(0) + ' µg/m³';
+    document.getElementById('sim-rain-val').textContent = simRainfall.toFixed(0) + ' mm/mo';
+    
+    runSimCalculation();
+}
+
+function resetSimGrid() {
+    initSimGrid();
+}
+
+function runSimCalculation() {
+    // 1D row advection-deposition wind model (wind blows from column 0 to 7)
+    // Wind dilution scaling: lower wind speed = higher concentrated emissions
+    const windSpeed = simWindSpeed;
+    const pmSourceBase = simAmbientPm;
+    
+    // Reset/calculate PM levels across the grid
+    for (let r = 0; r < gridRows; r++) {
+        let currentPm = 20.0; // background clean air boundary
+        
+        for (let c = 0; c < gridCols; c++) {
+            const cell = gridMapState[r][c];
+            
+            // 1. Emission contributions
+            if (cell.type === 'road') {
+                currentPm += (pmSourceBase * (2.0 / windSpeed)); // traffic emissions inversely proportional to wind speed
+            } else if (cell.type === 'industrial') {
+                currentPm += (250.0 * (2.0 / windSpeed)); // industrial emissions
+            }
+            
+            // 2. Vegetative dry deposition scrubbing
+            if (cell.type === 'pine' || cell.type === 'birch') {
+                const plantInfo = simPlantsDb[cell.type];
+                const pmFraction = 'pm25';
+                
+                // Calculate deposition velocity from models.js
+                const vd = CanopyDepositionSimulator.calculateVd(
+                    pmFraction,
+                    windSpeed,
+                    plantInfo.lai,
+                    plantInfo.isPubescent
+                );
+                
+                // Exponent decay calculation: Barrier width W = 10m, mixing height H = 10m
+                // decay = exp(-Vd * LAI * W / (H * u))
+                // with W/H = 1, decay = exp(-Vd * 0.01 * LAI / u)
+                const decayExponent = (vd * 0.01 * plantInfo.lai) / windSpeed;
+                currentPm = currentPm * Math.exp(-decayExponent);
+            }
+            
+            cell.pmLevel = currentPm;
+        }
+    }
+    
+    // Calculate dashboard statistics
+    let totalWalkways = 0;
+    let safeWalkways = 0;
+    let totalScrubbedGrams = 0;
+    let totalCoolingOffsetDollars = 0;
+    let totalCo2MitigatedKg = 0;
+    
+    // Track count of trees on grid for litter leaching calculations
+    let pineCount = 0;
+    let birchCount = 0;
+    
+    for (let r = 0; r < gridRows; r++) {
+        for (let c = 0; c < gridCols; c++) {
+            const cell = gridMapState[r][c];
+            
+            if (cell.type === 'path') {
+                totalWalkways++;
+                if (cell.pmLevel < 35.0) {
+                    safeWalkways++;
+                }
+            } else if (cell.type === 'pine' || cell.type === 'birch') {
+                if (cell.type === 'pine') pineCount++;
+                if (cell.type === 'birch') birchCount++;
+                
+                const plantInfo = simPlantsDb[cell.type];
+                const vd = CanopyDepositionSimulator.calculateVd('pm25', windSpeed, plantInfo.lai, plantInfo.isPubescent);
+                const depositionFlux = vd * cell.pmLevel * 0.01; // ug / (m2 * s)
+                
+                // Mass removed grams/day = flux * cell_area (100 m2) * 86400 seconds * 10^-6 g/ug
+                const cellScrubbedGrams = depositionFlux * 100 * 86400 * 0.000001;
+                totalScrubbedGrams += cellScrubbedGrams;
+                
+            } else if (cell.type === 'ivy') {
+                // Building green wall HVAC offset
+                // Wall area = 120 m2, COP = 3.0, electricity = 0.15, shading reduction = 35%
+                const plantInfo = simPlantsDb.ivy;
+                const offset = GreenWallThermalPredictor.simulateThermalOffset(
+                    120, 
+                    plantInfo.lai, 
+                    1.5, // transpiration L/m2/day
+                    3.0, // COP
+                    0.15, // $/kWh electricity
+                    35.0 // % shading block
+                );
+                totalCoolingOffsetDollars += offset.dailySavingsDollars;
+                totalCo2MitigatedKg += offset.dailyCo2MitigatedKg;
+            }
+        }
+    }
+    
+    // Update city breathing index
+    const breathingIndex = totalWalkways > 0 ? (safeWalkways / totalWalkways) * 100 : 100.0;
+    document.getElementById('sim-stat-breathing').textContent = breathingIndex.toFixed(1);
+    
+    const breathingDesc = document.getElementById('sim-stat-breathing-desc');
+    if (breathingIndex >= 90) {
+        breathingDesc.textContent = "Excellent: Almost all walking zones are protected by buffers.";
+        breathingDesc.style.color = "#55efc4";
+    } else if (breathingIndex >= 50) {
+        breathingDesc.textContent = "Caution: Downwind sidewalk cells are exposed to traffic exhaust.";
+        breathingDesc.style.color = "#ffeaa7";
+    } else {
+        breathingDesc.textContent = "Hazardous: Pedestrians are inhaling direct source emissions!";
+        breathingDesc.style.color = "#ff7675";
+    }
+    
+    // Update daily PM scrubbed
+    document.getElementById('sim-stat-scrubbed').textContent = totalScrubbedGrams.toFixed(2);
+    document.getElementById('sim-stat-scrubbed-desc').textContent = `Foliar interception removes ${(totalScrubbedGrams/1000).toFixed(4)} kg of particulate matter daily.`;
+    
+    // Update cooling offsets
+    document.getElementById('sim-stat-cooling').textContent = totalCoolingOffsetDollars.toFixed(2);
+    document.getElementById('sim-stat-cooling-desc').textContent = `Green walls mitigate ${totalCo2MitigatedKg.toFixed(1)} kg CO₂ emissions daily.`;
+    
+    // Update Soil Runoff & Leaching Safety from Litter Decay
+    // Models litter leaching kinetics for the entire grid based on placed plants
+    simAdjuvant = document.getElementById('sim-pest-adjuvant').value;
+    
+    let simulatedTeqLeached = 0.0;
+    let simulatedTeqRemaining = 0.0;
+    let runoffStatus = "SAFE RUNOFF";
+    let alertClass = "badge-safe";
+    let runoffText = "Decaying foliage leachate remains below toxicity hazard levels.";
+    
+    if (pineCount > 0 || birchCount > 0) {
+        // Assume baseline heavy traffic pesticide/PAH loads on leaves
+        const baseLmw = (pineCount * 45) + (birchCount * 30);
+        const baseHmw = (pineCount * 60) + (birchCount * 40);
+        const basePcb = (pineCount * 8) + (birchCount * 5);
+        
+        // Use Pinus profile to estimate litter decay stage
+        const leach = LitterLeacher.simulateLeaching(
+            'pinus',
+            28, // Kolkata mean temp
+            simRainfall,
+            12, // 1 year timeline
+            baseLmw,
+            baseHmw,
+            basePcb
+        );
+        
+        // Adjuvant adjustments to runoff leached fraction
+        let adjuvantF = 1.0;
+        if (simAdjuvant === 'surfactant') adjuvantF = 0.6;
+        if (simAdjuvant === 'sticker') adjuvantF = 0.25;
+        
+        simulatedTeqLeached = leach.leachedTeq * adjuvantF;
+        simulatedTeqRemaining = leach.remainingTeq;
+        
+        if (simulatedTeqLeached >= 5.0) {
+            runoffStatus = "TOXIC RUNOFF HAZARD";
+            alertClass = "badge-danger";
+            runoffText = `CRITICAL: Heavy rain has leached carcinogenic PAH compounds to soil. TEQ: ${simulatedTeqLeached.toFixed(2)} ng/g.`;
+        } else if (simulatedTeqLeached >= 1.0) {
+            runoffStatus = "MODERATE POLLUTION";
+            alertClass = "badge-warning";
+            runoffText = `CAUTION: Rain wash-off contains elevated PAH/pesticide levels. Runoff TEQ: ${simulatedTeqLeached.toFixed(2)} ng/g.`;
+        } else {
+            runoffStatus = "SAFE RUNOFF";
+            alertClass = "badge-safe";
+            runoffText = `Optimal. Rainwater leachate is safe. Soil runoff TEQ: ${simulatedTeqLeached.toFixed(2)} ng/g.`;
+        }
+    }
+    
+    const runoffStatusEl = document.getElementById('sim-stat-runoff-status');
+    runoffStatusEl.textContent = runoffStatus;
+    if (runoffStatus === "TOXIC RUNOFF HAZARD") {
+        runoffStatusEl.style.color = "#ff7675";
+    } else if (runoffStatus === "MODERATE POLLUTION") {
+        runoffStatusEl.style.color = "#ffeaa7";
+    } else {
+        runoffStatusEl.style.color = "#55efc4";
+    }
+    document.getElementById('sim-stat-runoff-desc').textContent = runoffText;
+    
+    // Render safety badges inside path cells
+    renderCellBadges();
+}
+
+function renderSimGrid() {
+    const gridContainer = document.getElementById('sim-map-grid');
+    gridContainer.innerHTML = '';
+    
+    for (let r = 0; r < gridRows; r++) {
+        for (let c = 0; c < gridCols; c++) {
+            const cell = gridMapState[r][c];
+            const cellDiv = document.createElement('div');
+            cellDiv.className = `map-grid-cell cell-${cell.type}`;
+            cellDiv.id = `cell-${r}-${c}`;
+            cellDiv.setAttribute('onclick', `handleGridCellClick(${r}, ${c})`);
+            
+            // Name label
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'cell-name-label';
+            labelSpan.textContent = cell.type === 'empty' ? '' : cell.type;
+            cellDiv.appendChild(labelSpan);
+            
+            // PM concentration value badge (added later in renderCellBadges)
+            const badgeSpan = document.createElement('span');
+            badgeSpan.className = 'cell-pm-badge';
+            badgeSpan.id = `badge-${r}-${c}`;
+            cellDiv.appendChild(badgeSpan);
+            
+            gridContainer.appendChild(cellDiv);
+        }
+    }
+}
+
+function renderCellBadges() {
+    for (let r = 0; r < gridRows; r++) {
+        for (let c = 0; c < gridCols; c++) {
+            const cell = gridMapState[r][c];
+            const badge = document.getElementById(`badge-${r}-${c}`);
+            if (badge) {
+                if (cell.type === 'road' || cell.type === 'path' || cell.type === 'comm' || cell.type === 'ivy' || cell.type === 'industrial') {
+                    const pm = cell.pmLevel;
+                    badge.textContent = Math.round(pm) + ' µg';
+                    badge.className = 'cell-pm-badge';
+                    if (pm < 35.0) {
+                        badge.classList.add('badge-safe');
+                    } else if (pm < 75.0) {
+                        badge.classList.add('badge-warning');
+                    } else {
+                        badge.classList.add('badge-danger');
+                    }
+                } else {
+                    badge.textContent = '';
+                }
+            }
+        }
+    }
+}
+
+let isSimRaining = false;
+let simRainInterval = null;
+
+function triggerSimRainfall() {
+    if (isSimRaining) return;
+    
+    isSimRaining = true;
+    const rainBtn = document.getElementById('sim-rain-btn');
+    rainBtn.textContent = "Storm Active...";
+    rainBtn.style.background = "#e74c3c";
+    
+    const overlay = document.getElementById('sim-rain-overlay');
+    overlay.style.display = 'block';
+    overlay.innerHTML = '';
+    
+    // Spawn falling rain droplets
+    simRainInterval = setInterval(() => {
+        const drop = document.createElement('div');
+        drop.classList.add('sim-rain-drop');
+        drop.style.left = Math.random() * 100 + '%';
+        drop.style.animationDuration = (0.4 + Math.random() * 0.3) + 's';
+        overlay.appendChild(drop);
+        
+        setTimeout(() => {
+            drop.remove();
+        }, 800);
+    }, 25);
+    
+    // Stop after 3.5 seconds
+    setTimeout(() => {
+        clearInterval(simRainInterval);
+        isSimRaining = false;
+        overlay.style.display = 'none';
+        overlay.innerHTML = '';
+        
+        rainBtn.textContent = "Simulate Heavy Storm";
+        rainBtn.style.background = "var(--color-emerald)";
+        
+        // Soil leaching calculation updates
+        alert("Rainstorm simulation complete! Folia surface particulates (SPM) washed off into local soils. Runoff toxicity safety updated on the dashboard.");
+        runSimCalculation();
+    }, 3500);
+}
+
+// Make functions globally accessible for inline html event handlers
+window.updateSimParameters = updateSimParameters;
+window.resetSimGrid = resetSimGrid;
+window.selectPaletteTool = selectPaletteTool;
+window.handleGridCellClick = handleGridCellClick;
+window.triggerSimRainfall = triggerSimRainfall;
 
 // 9. Advanced Biomonitoring Analytical Tools UI Bindings
 function switchToolTab(toolId) {
@@ -617,7 +864,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showPathology('upper');
     changeRainSpeciesProfile();
     runRegressionSimulation();
-    runPlannerRecommendation();
+    initSimGrid();
     
     // Initialize new analytical tools calculations
     runLapdnCalculation();

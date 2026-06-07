@@ -317,53 +317,120 @@
         <!-- MUNICIPAL PLANNER TAB -->
         <section id="tab-content-planner" class="tab-panel">
             <div class="planner-header">
-                <h2>Municipal Bio-monitor Selection Assistant</h2>
-                <p>Configure your local environmental conditions and target airspace properties to discover the optimal plant bio-monitors based on empirical trials.</p>
+                <h2>SimCity Greenbelt Grid & Air Quality Simulator</h2>
+                <p>Design a zoning layout, place specialized plant bio-monitors, and model localized PM scrubbing, cooling offsets, and pedestrian exposure in real-time.</p>
             </div>
             
             <div class="planner-interface">
+                <!-- Sidebar Controls -->
                 <div class="planner-sidebar glass-card">
-                    <h3>Environmental Parameters</h3>
+                    <h3>Simulation Controllers</h3>
                     
                     <div class="planner-form">
                         <div class="form-group">
-                            <label for="param-canopy">Target Vertical Stratum (Canopy Level):</label>
-                            <select id="param-canopy" class="premium-select" onchange="runPlannerRecommendation()">
-                                <option value="ground">Ground-Level (Roadside shrubs & understory)</option>
-                                <option value="upper">Upper-Canopy (Tall street trees)</option>
-                            </select>
+                            <label for="sim-wind">Ambient Wind Velocity: <span id="sim-wind-val">2.0 m/s</span></label>
+                            <input type="range" id="sim-wind" min="0.5" max="10" step="0.5" value="2.0" class="premium-slider" oninput="updateSimParameters()">
                         </div>
                         
                         <div class="form-group">
-                            <label for="param-traffic">Ambient Pollution Profile:</label>
-                            <select id="param-traffic" class="premium-select" onchange="runPlannerRecommendation()">
-                                <option value="heavy">Heavy Traffic & Resuspended Soils</option>
-                                <option value="industrial">Heavy Metal Industrial Plumes</option>
-                                <option value="moderate">Moderate Urban Standard</option>
-                            </select>
+                            <label for="sim-ambient-pm">Source Exhaust Level (PM₂.₅): <span id="sim-pm-val">120 µg/m³</span></label>
+                            <input type="range" id="sim-ambient-pm" min="20" max="300" step="10" value="120" class="premium-slider" oninput="updateSimParameters()">
                         </div>
                         
                         <div class="form-group">
-                            <label for="param-rain">Rainfall & Wash-off Risk:</label>
-                            <select id="param-rain" class="premium-select" onchange="runPlannerRecommendation()">
-                                <option value="high">High Precipitation (Frequent wash-off potential)</option>
-                                <option value="low">Arid / Low Rainfall (Sustained dust loading)</option>
-                            </select>
+                            <label for="sim-rain">Precipitation Rate: <span id="sim-rain-val">150 mm/mo</span></label>
+                            <input type="range" id="sim-rain" min="0" max="600" step="10" value="150" class="premium-slider" oninput="updateSimParameters()">
                         </div>
 
                         <div class="form-group">
-                            <label for="param-target-pm">Critical Particle Fraction Target:</label>
-                            <select id="param-target-pm" class="premium-select" onchange="runPlannerRecommendation()">
-                                <option value="ultrafine">Ultrafine PM₀.₂ (Toxic/vascular threat)</option>
-                                <option value="fine">Fine PM₂.₅ (General respiratory threat)</option>
-                                <option value="coarse">Coarse PM₁₀ (Dust, road aggregates)</option>
+                            <label for="sim-pest-adjuvant">Pesticide Adjuvant Formulation:</label>
+                            <select id="sim-pest-adjuvant" class="premium-select" onchange="runSimCalculation()">
+                                <option value="none">No Adjuvant (High wash-off)</option>
+                                <option value="surfactant">Surfactant (Moderate runoff)</option>
+                                <option value="sticker">Sticker Adjuvant (Rain-fast barrier)</option>
                             </select>
+                        </div>
+                        
+                        <div class="sim-action-buttons" style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <button id="sim-rain-btn" class="action-btn" onclick="triggerSimRainfall()">Simulate Heavy Storm</button>
+                            <button id="sim-reset-btn" class="action-btn secondary" onclick="resetSimGrid()">Clear/Reset Grid</button>
                         </div>
                     </div>
                 </div>
                 
-                    <div class="recommendations-container" id="planner-recommendations-list">
-                        <!-- Dynamically populated recommendation cards -->
+                <!-- Main Grid and Dashboard area -->
+                <div class="planner-results" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <!-- Tool Palette selector -->
+                    <div class="tool-palette-container glass-card" style="padding: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                        <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                            <span style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Zoning & Planting Tool Palette</span>
+                            <span style="font-size: 0.8rem; color: #ffffff;">Choose a brush below, then click on cells in the map grid to design.</span>
+                        </div>
+                        <div class="palette-tools" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button class="palette-btn active" id="palette-btn-road" onclick="selectPaletteTool('road')">
+                                <span>Road (Source)</span>
+                            </button>
+                            <button class="palette-btn" id="palette-btn-industrial" onclick="selectPaletteTool('industrial')">
+                                <span>Factory (Source)</span>
+                            </button>
+                            <button class="palette-btn" id="palette-btn-path" onclick="selectPaletteTool('path')">
+                                <span>Sidewalk</span>
+                            </button>
+                            <button class="palette-btn" id="palette-btn-comm" onclick="selectPaletteTool('comm')">
+                                <span>Building</span>
+                            </button>
+                            <button class="palette-btn" id="palette-btn-pine" onclick="selectPaletteTool('pine')">
+                                <span>Pinus (Tree)</span>
+                            </button>
+                            <button class="palette-btn" id="palette-btn-birch" onclick="selectPaletteTool('birch')">
+                                <span>Betula (Tree)</span>
+                            </button>
+                            <button class="palette-btn" id="palette-btn-ivy" onclick="selectPaletteTool('ivy')">
+                                <span>Hedera (Wall)</span>
+                            </button>
+                            <button class="palette-btn" id="palette-btn-clear" onclick="selectPaletteTool('clear')">
+                                <span>Bulldoze</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- The 8x6 Grid Map -->
+                    <div class="sim-grid-container glass-card" style="padding: 1.5rem; background: rgba(5, 8, 16, 0.6); position: relative; overflow: hidden;">
+                        <div class="grid-wind-indicator" style="position: absolute; top: 10px; right: 15px; font-size: 0.75rem; color: var(--color-cyan); font-weight: 700; letter-spacing: 1px; display: flex; align-items: center; gap: 0.3rem;">
+                            <span>Wind Vector: Left to Right</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </div>
+                        <div class="sim-overlay-rain" id="sim-rain-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; display: none;"></div>
+                        
+                        <div class="sim-grid-viewport" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch;">
+                            <div id="sim-map-grid" class="map-grid-table" style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; min-width: 580px; margin: 0.5rem auto;">
+                                <!-- Dynamically instantiated grid blocks -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Real-Time SimCity Performance Dashboard -->
+                    <div class="sim-stats-dashboard" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <div class="result-box glow-cyan" style="min-height: 105px;">
+                            <span class="result-label">City Breathing Index (Pedestrian Safety)</span>
+                            <div class="result-number"><span id="sim-stat-breathing">100.0</span> <span class="unit">% Safe</span></div>
+                            <span class="trait-sig" id="sim-stat-breathing-desc">All walkways remain within safe target exposure thresholds.</span>
+                        </div>
+                        <div class="result-box glow-emerald" style="min-height: 105px;">
+                            <span class="result-label">Total Daily PM Mass scrubbed</span>
+                            <div class="result-number"><span id="sim-stat-scrubbed">0.00</span> <span class="unit">g/day</span></div>
+                            <span class="trait-sig" id="sim-stat-scrubbed-desc">Total intercepted particulates on canopy leaf surface.</span>
+                        </div>
+                        <div class="result-box glow-amber" style="min-height: 105px;">
+                            <span class="result-label">Building Green HVAC Energy Offset</span>
+                            <div class="result-number"><span id="sim-stat-cooling">0.00</span> <span class="unit">$/day</span></div>
+                            <span class="trait-sig" id="sim-stat-cooling-desc">Transpirational & shading savings (0.0 kg CO₂/day).</span>
+                        </div>
+                        <div class="result-box glow-violet" style="min-height: 105px;">
+                            <span class="result-label">Soil Leaching & Litter Runoff Safety</span>
+                            <div class="result-number" id="sim-stat-runoff-status" style="font-size: 1.35rem; font-weight: 700; margin-top: 0.4rem; color: #55efc4;">SAFE RUNOFF</div>
+                            <span class="trait-sig" id="sim-stat-runoff-desc">Leached runoff toxic equivalency: 0.00 ng/g.</span>
+                        </div>
                     </div>
                 </div>
             </div>

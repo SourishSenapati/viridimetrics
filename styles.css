@@ -1571,3 +1571,197 @@ body.dark-theme {
     }
 }
 
+/* ================================================== */
+/* SimCity Greenbelt Grid Simulator Styles            */
+/* ================================================== */
+
+.palette-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-card);
+    color: var(--text-secondary);
+    padding: 0.5rem 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.8rem;
+    transition: var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.palette-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.palette-btn.active {
+    background: rgba(6, 182, 212, 0.12);
+    border-color: var(--color-cyan);
+    color: var(--color-cyan);
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+}
+
+/* Specific palette btn styling */
+#palette-btn-road.active { background: rgba(245, 158, 11, 0.08); border-color: var(--color-amber); color: var(--color-amber); }
+#palette-btn-industrial.active { background: rgba(235, 94, 85, 0.08); border-color: #ff7675; color: #ff7675; }
+#palette-btn-path.active { background: rgba(255, 255, 255, 0.08); border-color: #ffffff; color: #ffffff; }
+#palette-btn-pine.active { background: rgba(16, 185, 129, 0.08); border-color: var(--color-emerald); color: var(--color-emerald); }
+#palette-btn-birch.active { background: rgba(6, 182, 212, 0.08); border-color: var(--color-cyan); color: var(--color-cyan); }
+#palette-btn-ivy.active { background: rgba(139, 92, 246, 0.08); border-color: var(--color-violet); color: var(--color-violet); }
+
+.map-grid-cell {
+    aspect-ratio: 1;
+    position: relative;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 4px;
+}
+
+.map-grid-cell:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Cell Types */
+.map-grid-cell.cell-empty {
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.map-grid-cell.cell-road {
+    background: linear-gradient(180deg, #18191c 0%, #111215 100%);
+    border-color: #2c2d30;
+}
+.map-grid-cell.cell-road::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    border-top: 2px dashed rgba(245, 158, 11, 0.6);
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.map-grid-cell.cell-industrial {
+    background: linear-gradient(135deg, #2b1f1d 0%, #1c1413 100%);
+    border-color: rgba(235, 94, 85, 0.2);
+}
+.map-grid-cell.cell-industrial::before {
+    content: '🏭';
+    font-size: 1.5rem;
+    filter: drop-shadow(0 0 5px rgba(235, 94, 85, 0.4));
+}
+
+.map-grid-cell.cell-path {
+    background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+.map-grid-cell.cell-path::before {
+    content: '🚶';
+    font-size: 1.35rem;
+    opacity: 0.85;
+}
+
+.map-grid-cell.cell-comm {
+    background: linear-gradient(135deg, #1a2536 0%, #0c121a 100%);
+    border-color: rgba(6, 182, 212, 0.2);
+}
+.map-grid-cell.cell-comm::before {
+    content: '🏢';
+    font-size: 1.5rem;
+}
+
+.map-grid-cell.cell-pine {
+    background: linear-gradient(135deg, #0f2d1e 0%, #06150e 100%);
+    border-color: rgba(16, 185, 129, 0.25);
+}
+.map-grid-cell.cell-pine::before {
+    content: '🌲';
+    font-size: 1.5rem;
+    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.4));
+}
+
+.map-grid-cell.cell-birch {
+    background: linear-gradient(135deg, #0e2930 0%, #051317 100%);
+    border-color: rgba(6, 182, 212, 0.25);
+}
+.map-grid-cell.cell-birch::before {
+    content: '🌳';
+    font-size: 1.5rem;
+    filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.4));
+}
+
+.map-grid-cell.cell-ivy {
+    background: linear-gradient(135deg, #1f1b2e 0%, #0c0a13 100%);
+    border-color: rgba(139, 92, 246, 0.25);
+}
+.map-grid-cell.cell-ivy::before {
+    content: '🏢🌿';
+    font-size: 1.35rem;
+    filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.4));
+}
+
+/* Badges for PM Concentration level in cell */
+.cell-pm-badge {
+    position: absolute;
+    bottom: 3px;
+    right: 4px;
+    font-size: 8px;
+    font-weight: 700;
+    padding: 1px 3px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    line-height: 1;
+}
+
+.cell-pm-badge.badge-safe { color: #55efc4; }
+.cell-pm-badge.badge-warning { color: #ffeaa7; }
+.cell-pm-badge.badge-danger { color: #ff7675; }
+
+.cell-name-label {
+    position: absolute;
+    top: 3px;
+    left: 4px;
+    font-size: 7px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    pointer-events: none;
+    line-height: 1;
+}
+
+/* Rainfall Overlay over simulation map */
+.sim-overlay-rain {
+    background: rgba(10, 25, 47, 0.25);
+}
+
+.sim-rain-drop {
+    position: absolute;
+    background: linear-gradient(transparent, rgba(174, 219, 255, 0.5));
+    width: 1px;
+    height: 12px;
+    opacity: 0.6;
+    animation: simFall linear forwards;
+}
+
+@keyframes simFall {
+    to {
+        transform: translateY(350px);
+    }
+}
+
+
