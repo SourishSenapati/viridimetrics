@@ -11,10 +11,12 @@ __pycache__/
 *.pyo
 *.pyd
 .pytest_cache/
+.venv/
 backend/.venv/
 backend/.pytest_cache/
 backend/viridimetrics.db
-backend/viridimetrics.db-journal
+viridimetrics.db
+viridimetrics.db-journal
 
 # Logs
 *.log

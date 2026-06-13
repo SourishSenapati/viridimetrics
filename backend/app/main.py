@@ -135,6 +135,9 @@ def calculate_hvac_offset(req: CalculateRequest, db: Session = Depends(get_db)):
             detail=f"Plant species '{req.plant_type}' is not registered."
         )
 
+    cop_val = req.cop if req.cop is not None else 3.0
+    rate_val = req.electricity_rate if req.electricity_rate is not None else 0.15
+
     # Invoke ThermalCalculator service
     results = ThermalCalculator.calculate_total_system_savings(
         wall_area_m2=req.wall_area_m2,
@@ -142,11 +145,11 @@ def calculate_hvac_offset(req: CalculateRequest, db: Session = Depends(get_db)):
         temperature_c=req.temperature_c,
         humidity=req.humidity,
         solar_radiation=req.solar_radiation,
-        crop_coefficient=species.transpiration_rate_coeff,
-        extinction_coefficient=species.shading_extinction_coeff,
-        added_r_value=species.added_r_value,
-        chiller_cop=req.cop,
-        electricity_rate=req.electricity_rate
+        crop_coefficient=float(species.transpiration_rate_coeff),
+        extinction_coefficient=float(species.shading_extinction_coeff),
+        added_r_value=float(species.added_r_value),
+        chiller_cop=cop_val,
+        electricity_rate=rate_val
     )
 
     # Convert annual details
@@ -155,7 +158,7 @@ def calculate_hvac_offset(req: CalculateRequest, db: Session = Depends(get_db)):
         annual_maintenance_usd_per_m2=25.00,
         wall_area_m2=req.wall_area_m2,
         daily_electricity_savings_kwh=results["hvac_load_reduction_kwh"],
-        electricity_rate_usd_kwh=req.electricity_rate,
+        electricity_rate_usd_kwh=rate_val,
         discount_rate_percent=8.0,
         project_lifetime_years=15
     ))
@@ -179,6 +182,8 @@ def calculate_hvac_offset(req: CalculateRequest, db: Session = Depends(get_db)):
         logger.error(f"Failed to log calculation: {e}")
         db.rollback()
 
+    annual_co2_kg = round(results["hvac_load_reduction_kwh"] * 365.0 * 0.38, 2)
+
     return CalculateResponse(
         cooling_kwh=round(results["hvac_load_reduction_kwh"], 2),
         cost_saved=round(results["daily_financial_yield_usd"], 2),
@@ -191,7 +196,7 @@ def calculate_hvac_offset(req: CalculateRequest, db: Session = Depends(get_db)):
             daily_savings_usd=round(results["daily_financial_yield_usd"], 2),
             monthly_savings_usd=round(financials.annual_utility_savings_usd / 12, 2),
             annual_savings_usd=round(financials.annual_utility_savings_usd, 2),
-            annual_co2_reduction_kg=round(financials.annual_co2_reduction_kg, 2) if hasattr(financials, 'annual_co2_reduction_kg') else round(results["hvac_load_reduction_kwh"] * 365.0 * 0.38, 2)
+            annual_co2_reduction_kg=annual_co2_kg
         )
     )
 
