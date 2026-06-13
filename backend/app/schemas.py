@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, Dict
 
 class CalculateRequest(BaseModel):
@@ -26,6 +26,24 @@ class CalculateResponse(BaseModel):
     cost_saved: float = Field(..., description="Daily monetary savings in dollars/day.")
     co2_saved: float = Field(..., description="Daily CO2 reduction in kg/day.")
     details: FinancialDetails
+    
+    # Audit & Comparison fields
+    baseline_heat_gain: float
+    vegetated_heat_gain: float
+    net_reduction: float
+    hvac_offset: float
+    
+    # Error bands / Confidence bounds
+    confidence_range_low: float
+    confidence_range_high: float
+    
+    # Provenance metadata
+    package_id: Optional[str] = None
+    equation_version: Optional[str] = None
+    species_dataset_version: Optional[str] = None
+    financial_model_version: Optional[str] = None
+    weather_assumption_version: Optional[str] = None
+    generated_at: Optional[str] = None
 
 class SpeciesBase(BaseModel):
     key: str
@@ -38,9 +56,7 @@ class SpeciesBase(BaseModel):
 
 class SpeciesResponse(SpeciesBase):
     id: int
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class HistoryResponse(BaseModel):
     id: int
@@ -52,7 +68,19 @@ class HistoryResponse(BaseModel):
     cooling_kwh: float
     cost_saved: float
     co2_saved: float
+    
+    # Audit & Comparison fields
+    baseline_heat_gain: Optional[float] = None
+    vegetated_heat_gain: Optional[float] = None
+    net_reduction: Optional[float] = None
+    hvac_offset: Optional[float] = None
+    
+    # Provenance details
+    package_id: Optional[str] = None
+    equation_version: Optional[str] = None
+    species_dataset_version: Optional[str] = None
+    financial_model_version: Optional[str] = None
+    weather_assumption_version: Optional[str] = None
+    
     created_at: datetime
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

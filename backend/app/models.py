@@ -26,6 +26,20 @@ class CalculationLog(Base):
     cooling_kwh = Column(Float, nullable=False)
     cost_saved = Column(Float, nullable=False)
     co2_saved = Column(Float, nullable=False)
+    
+    # Heat Balance Audit Fields
+    baseline_heat_gain = Column(Float, nullable=True)
+    vegetated_heat_gain = Column(Float, nullable=True)
+    net_reduction = Column(Float, nullable=True)
+    hvac_offset = Column(Float, nullable=True)
+    
+    # Calculation Provenance Fields
+    package_id = Column(String, nullable=True)
+    equation_version = Column(String, nullable=True)
+    species_dataset_version = Column(String, nullable=True)
+    financial_model_version = Column(String, nullable=True)
+    weather_assumption_version = Column(String, nullable=True)
+    
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
 class IngestionAuditLog(Base):

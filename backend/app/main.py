@@ -16,6 +16,8 @@ from app.services.financial_yield_calculator import FinancialYieldCalculator, Fi
 from app.services.building_data_importer import BuildingDataImporter
 from app.services.environmental_conditions_manager import EnvironmentalConditionsManager, EnvironmentalBaselines
 from app.services.report_generator import ReportGenerator, ReportRequest
+from app.services.assumption_registry import AssumptionRegistry
+from app.services.calculation_provenance import CalculationProvenance
 
 # Setup logger
 logger = logging.getLogger("viridimetrics.main")
@@ -135,7 +137,7 @@ def calculate_hvac_offset(req: CalculateRequest, db: Session = Depends(get_db)):
             detail=f"Plant species '{req.plant_type}' is not registered."
         )
 
-    cop_val = req.cop if req.cop is not None else 3.0
+    cop_val = req.cop if req.cop is not None else AssumptionRegistry.ASHRAE_DEFAULT_COP
     rate_val = req.electricity_rate if req.electricity_rate is not None else 0.15
 
     # Invoke ThermalCalculator service
@@ -163,7 +165,7 @@ def calculate_hvac_offset(req: CalculateRequest, db: Session = Depends(get_db)):
         project_lifetime_years=15
     ))
 
-    # Log calculations to database
+    # Log calculations to database (First pass without package ID to get auto-incremented primary key)
     log_entry = CalculationLog(
         wall_area_m2=req.wall_area_m2,
         plant_type=species.scientific_name,
@@ -172,22 +174,59 @@ def calculate_hvac_offset(req: CalculateRequest, db: Session = Depends(get_db)):
         solar_radiation=req.solar_radiation,
         cooling_kwh=round(results["hvac_load_reduction_kwh"], 2),
         cost_saved=round(results["daily_financial_yield_usd"], 2),
-        co2_saved=round(results["hvac_load_reduction_kwh"] * 0.38, 2)
+        co2_saved=round(results["hvac_load_reduction_kwh"] * AssumptionRegistry.CO2_EMISSION_FACTOR, 2),
+        
+        # Heat balance comparison values
+        baseline_heat_gain=round(results["baseline_heat_gain"], 2),
+        vegetated_heat_gain=round(results["vegetated_heat_gain"], 2),
+        net_reduction=round(results["net_reduction"], 2),
+        hvac_offset=round(results["hvac_offset"], 2),
+        
+        # Methodology version tracking
+        equation_version=AssumptionRegistry.METHODOLOGY_VERSION,
+        species_dataset_version=AssumptionRegistry.SPECIES_DATASET_VERSION,
+        financial_model_version=AssumptionRegistry.FINANCIAL_MODEL_VERSION,
+        weather_assumption_version=AssumptionRegistry.WEATHER_ASSUMPTION_VERSION
     )
     
     try:
         db.add(log_entry)
         db.commit()
+        db.refresh(log_entry)
+        
+        # Generate and update calculation package ID
+        package_id = CalculationProvenance.generate_package_id(cast(int, log_entry.id))
+        setattr(log_entry, "package_id", package_id)
+        db.commit()
+        db.refresh(log_entry)
     except Exception as e:
         logger.error(f"Failed to log calculation: {e}")
         db.rollback()
+        package_id = "VRM-TEMP-LOG"
 
-    annual_co2_kg = round(results["hvac_load_reduction_kwh"] * 365.0 * 0.38, 2)
+    annual_co2_kg = round(results["hvac_load_reduction_kwh"] * 365.0 * AssumptionRegistry.CO2_EMISSION_FACTOR, 2)
+    prov = CalculationProvenance.get_provenance_header()
 
     return CalculateResponse(
         cooling_kwh=round(results["hvac_load_reduction_kwh"], 2),
         cost_saved=round(results["daily_financial_yield_usd"], 2),
-        co2_saved=round(results["hvac_load_reduction_kwh"] * 0.38, 2),
+        co2_saved=round(results["hvac_load_reduction_kwh"] * AssumptionRegistry.CO2_EMISSION_FACTOR, 2),
+        
+        baseline_heat_gain=round(results["baseline_heat_gain"], 2),
+        vegetated_heat_gain=round(results["vegetated_heat_gain"], 2),
+        net_reduction=round(results["net_reduction"], 2),
+        hvac_offset=round(results["hvac_offset"], 2),
+        
+        confidence_range_low=round(results["confidence_range_low"], 2),
+        confidence_range_high=round(results["confidence_range_high"], 2),
+        
+        package_id=package_id,
+        equation_version=prov["equation_version"],
+        species_dataset_version=prov["species_dataset_version"],
+        financial_model_version=prov["financial_model_version"],
+        weather_assumption_version=prov["weather_assumption_version"],
+        generated_at=prov["generated_at"],
+        
         details=FinancialDetails(
             water_transpired_liters=round(results["water_transpiration_liters"], 2),
             latent_cooling_kwh=round(results["latent_thermal_offset_kwh"], 2),

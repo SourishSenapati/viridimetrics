@@ -30,6 +30,28 @@ interface CalculationDetails {
   annual_co2_reduction_kg: number;
 }
 
+interface CalculateResult {
+  cooling_kwh: number;
+  cost_saved: number;
+  co2_saved: number;
+  details: CalculationDetails;
+  
+  baseline_heat_gain: number;
+  vegetated_heat_gain: number;
+  net_reduction: number;
+  hvac_offset: number;
+  
+  confidence_range_low: number;
+  confidence_range_high: number;
+  
+  package_id?: string;
+  equation_version?: string;
+  species_dataset_version?: string;
+  financial_model_version?: string;
+  weather_assumption_version?: string;
+  generated_at?: string;
+}
+
 interface HistoryItem {
   id: number;
   wall_area_m2: number;
@@ -40,6 +62,18 @@ interface HistoryItem {
   cooling_kwh: number;
   cost_saved: number;
   co2_saved: number;
+  
+  baseline_heat_gain?: number;
+  vegetated_heat_gain?: number;
+  net_reduction?: number;
+  hvac_offset?: number;
+  
+  package_id?: string;
+  equation_version?: string;
+  species_dataset_version?: string;
+  financial_model_version?: string;
+  weather_assumption_version?: string;
+  
   created_at: string;
 }
 
@@ -102,6 +136,7 @@ export default function Home() {
   // Simulation Outputs
   const [coolingKwh, setCoolingKwh] = useState(0);
   const [details, setDetails] = useState<CalculationDetails | null>(null);
+  const [calcResult, setCalcResult] = useState<CalculateResult | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [isOfflineMode, setIsOfflineMode] = useState(false);
@@ -165,6 +200,7 @@ export default function Home() {
         const data = await res.json();
         setCoolingKwh(data.cooling_kwh);
         setDetails(data.details);
+        setCalcResult(data);
         loadHistory();
       } else {
         throw new Error("Calculation engine error");
@@ -196,22 +232,28 @@ export default function Home() {
       const shading_savings_kwh = bare_solar * (1.0 - transmission);
 
       let insulation_savings_kwh = 0;
+      let bare_conduction = 0;
+      let vegetated_conduction = 0;
       if (temperature > 22.0) {
-        const u_diff = (1.0 / 0.5) - (1.0 / (0.5 + species.added_r_value));
+        const u_bare = 1.0 / 0.5;
+        const u_green = 1.0 / (0.5 + species.added_r_value);
         const t_diff = temperature - 22.0;
-        insulation_savings_kwh = (wallArea * u_diff * t_diff * 24.0) / 1000.0;
+        bare_conduction = (wallArea * u_bare * t_diff * 24.0) / 1000.0;
+        vegetated_conduction = (wallArea * u_green * t_diff * 24.0) / 1000.0;
+        insulation_savings_kwh = bare_conduction - vegetated_conduction;
       }
 
-      const total_thermal = latent_cooling_kwh + shading_savings_kwh + insulation_savings_kwh;
-      const saved_kwh = total_thermal / cop;
+      const baseline_heat_gain = bare_solar + bare_conduction;
+      const vegetated_heat_gain = (bare_solar * transmission) + vegetated_conduction - latent_cooling_kwh;
+      const net_reduction = baseline_heat_gain - vegetated_heat_gain;
+      const saved_kwh = net_reduction / cop;
 
       const daily_savings_usd = saved_kwh * electricityRate;
       const monthly_savings_usd = daily_savings_usd * 30.4375;
       const annual_savings_usd = daily_savings_usd * 365.0;
       const annual_co2_reduction_kg = saved_kwh * 365.0 * 0.38;
 
-      setCoolingKwh(saved_kwh);
-      setDetails({
+      const fallbackDetails = {
         water_transpired_liters: transpired_volume,
         latent_cooling_kwh,
         shading_savings_kwh,
@@ -220,7 +262,30 @@ export default function Home() {
         monthly_savings_usd,
         annual_savings_usd,
         annual_co2_reduction_kg
-      });
+      };
+
+      const fallbackResult: CalculateResult = {
+        cooling_kwh: saved_kwh,
+        cost_saved: daily_savings_usd,
+        co2_saved: saved_kwh * 0.38,
+        details: fallbackDetails,
+        baseline_heat_gain,
+        vegetated_heat_gain,
+        net_reduction,
+        hvac_offset: saved_kwh,
+        confidence_range_low: saved_kwh * 0.925,
+        confidence_range_high: saved_kwh * 1.075,
+        package_id: "VRM-2025-LOCAL",
+        equation_version: "v1.2",
+        species_dataset_version: "v0.3",
+        financial_model_version: "v1.0",
+        weather_assumption_version: "v1.0",
+        generated_at: new Date().toISOString()
+      };
+
+      setCoolingKwh(saved_kwh);
+      setDetails(fallbackDetails);
+      setCalcResult(fallbackResult);
     } finally {
       setLoading(false);
     }
@@ -318,8 +383,7 @@ export default function Home() {
 
               <div className="lg:col-span-7 flex flex-col gap-6 w-full">
                 <CoolingOffsetPanel
-                  coolingKwh={coolingKwh}
-                  details={details}
+                  calcResult={calcResult}
                   loading={loading}
                 />
                 
@@ -372,6 +436,7 @@ export default function Home() {
                       <thead>
                         <tr className="border-b border-white/5 text-gray-400 font-semibold bg-white/5">
                           <th className="px-4 py-3">Timestamp</th>
+                          <th className="px-4 py-3">Package ID</th>
                           <th className="px-4 py-3">Species</th>
                           <th className="px-4 py-3">Area (m²)</th>
                           <th className="px-4 py-3">Temp (°C)</th>
@@ -386,6 +451,9 @@ export default function Home() {
                           <tr key={log.id} className="hover:bg-white/5 transition">
                             <td className="px-4 py-2.5 text-gray-500 text-[10px]">
                               {new Date(log.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                            </td>
+                            <td className="px-4 py-2.5 text-[10px] text-gray-400 font-mono">
+                              {log.package_id || "VRM-LOCAL"}
                             </td>
                             <td className="px-4 py-2.5 text-emerald-400 font-sans">{log.plant_type}</td>
                             <td className="px-4 py-2.5">{log.wall_area_m2}</td>

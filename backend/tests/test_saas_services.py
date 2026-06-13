@@ -110,9 +110,9 @@ def test_scenario_comparison(db_session):
 def test_building_data_ingest_pipeline(db_session):
     # CSV content with one valid row and one invalid row (to verify partial error logging)
     csv_data = (
-        "wall_area_m2,plant_type,temperature_c,humidity,solar_radiation,cop,electricity_rate\n"
-        "200.0,hedera_helix,32.0,50.0,600.0,3.0,0.15\n"
-        "0.0,hedera_helix,22.0,50.0,600.0,3.0,0.15\n" # Invalid area (<=0)
+        "month,chiller_kwh_utility,wall_area_m2,plant_type,temperature_c,humidity,solar_radiation,electricity_rate\n"
+        "January,4500.0,200.0,hedera_helix,32.0,50.0,600.0,0.15\n"
+        "January,4500.0,0.0,hedera_helix,22.0,50.0,600.0,0.15\n" # Invalid area (<=0)
     )
     
     res = BuildingDataImporter.parse_utility_csv_stream(db_session, csv_data, "utility_audit.csv")
