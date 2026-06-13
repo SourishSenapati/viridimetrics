@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional, cast
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from app.services.thermal_calculator import ThermalCalculator
@@ -18,7 +18,7 @@ class ScenarioComparisonRequest(BaseModel):
     humidity: float = Field(..., ge=0.0, le=100.0)
     solar_radiation: float = Field(..., ge=0.0)
     
-    scenarios: List[ScenarioConfig] = Field(..., min_items=2, max_items=5)
+    scenarios: List[ScenarioConfig] = Field(..., min_length=2, max_length=5)
 
 class ScenarioMetric(BaseModel):
     name: str
@@ -53,9 +53,9 @@ class SimulationScenarios:
                 ext_coef = 0.6
                 r_val = 0.45
             else:
-                crop_coef = species.transpiration_rate_coeff
-                ext_coef = species.shading_extinction_coeff
-                r_val = species.added_r_value
+                crop_coef = cast(float, species.transpiration_rate_coeff)
+                ext_coef = cast(float, species.shading_extinction_coeff)
+                r_val = cast(float, species.added_r_value)
 
             # Calculate metrics
             results = ThermalCalculator.calculate_total_system_savings(

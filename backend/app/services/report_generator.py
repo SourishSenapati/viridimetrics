@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, List
+from typing import Any, Dict, List
 from pydantic import BaseModel, Field
 
 class ReportRequest(BaseModel):
@@ -486,7 +486,7 @@ class ReportGenerator:
         return html_template.strip()
 
     @classmethod
-    def generate_report(cls, data: ReportRequest) -> Dict[str, any]:
+    def generate_report(cls, data: ReportRequest) -> Dict[str, Any]:
         if data.report_type == 'ENGINEERING_VALIDATION_V1':
             html_report = cls.compile_engineering_validation_report_v1(data)
         else:

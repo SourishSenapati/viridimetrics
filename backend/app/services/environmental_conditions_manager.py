@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Any, Dict
 from pydantic import BaseModel, Field
 
 class EnvironmentalBaselines(BaseModel):
@@ -15,7 +15,7 @@ class EnvironmentalConditionsManager:
     """
     
     @staticmethod
-    def validate_conditions(data: EnvironmentalBaselines) -> Dict[str, any]:
+    def validate_conditions(data: EnvironmentalBaselines) -> Dict[str, Any]:
         """
         Validates conditions against psychrometric envelope limits.
         For example: Extreme solar radiation above 1100 W/m² triggers a high-load solar warning.

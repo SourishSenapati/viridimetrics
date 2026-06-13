@@ -1,7 +1,7 @@
 import csv
 import io
 from datetime import datetime
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from app.models import CalculationLog
@@ -17,7 +17,7 @@ class BuildingDataImporter:
         db: Session,
         csv_content: str,
         filename: str
-    ) -> Dict[str, any]:
+    ) -> Dict[str, Any]:
         """
         Parses utility rows and bulk-loads calculations/baselines.
         Expected schema:

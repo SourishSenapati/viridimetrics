@@ -2,7 +2,7 @@ import logging
 from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, cast
 
 from app.database import engine, Base, get_db
 from app.models import Species, CalculationLog, IngestionAuditLog
@@ -145,9 +145,9 @@ def calculate_hvac_offset(req: CalculateRequest, db: Session = Depends(get_db)):
         temperature_c=req.temperature_c,
         humidity=req.humidity,
         solar_radiation=req.solar_radiation,
-        crop_coefficient=float(species.transpiration_rate_coeff),
-        extinction_coefficient=float(species.shading_extinction_coeff),
-        added_r_value=float(species.added_r_value),
+        crop_coefficient=cast(float, species.transpiration_rate_coeff),
+        extinction_coefficient=cast(float, species.shading_extinction_coeff),
+        added_r_value=cast(float, species.added_r_value),
         chiller_cop=cop_val,
         electricity_rate=rate_val
     )
@@ -224,7 +224,8 @@ def analyze_investment_financials(req: FinancialAnalyzerRequest):
 # 5. Building Data Import
 @app.post("/api/ingest")
 async def ingest_utility_meter_data(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    if not file.filename.endswith('.csv'):
+    filename = file.filename
+    if not filename or not filename.endswith('.csv'):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="File type is not supported. Please upload CSV formats only."
@@ -233,7 +234,7 @@ async def ingest_utility_meter_data(file: UploadFile = File(...), db: Session = 
     contents = await file.read()
     csv_text = contents.decode("utf-8")
     
-    results = BuildingDataImporter.parse_utility_csv_stream(db, csv_text, file.filename)
+    results = BuildingDataImporter.parse_utility_csv_stream(db, csv_text, filename)
     return results
 
 # 6. Environmental Conditions Explorer (Sensors Audit warnings)
