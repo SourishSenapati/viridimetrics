@@ -33,17 +33,29 @@ interface CalculateResult {
   financial_model_version?: string;
   weather_assumption_version?: string;
   generated_at?: string;
+
+  // New GIS & Compliance variables
+  facade_orientation?: string;
+  regulatory_framework?: string;
+  avoided_carbon_fine?: number;
+  water_cost_usd?: number;
+  is_premium_unlock?: number;
 }
 
 interface CoolingOffsetPanelProps {
   calcResult: CalculateResult | null;
   loading: boolean;
+  onOpenPaymentTerminal?: () => void;
 }
 
-export default function CoolingOffsetPanel({ calcResult, loading }: CoolingOffsetPanelProps) {
+export default function CoolingOffsetPanel({ 
+  calcResult, 
+  loading,
+  onOpenPaymentTerminal
+}: CoolingOffsetPanelProps) {
   if (loading) {
     return (
-      <div className="w-full flex flex-col justify-center items-center h-[460px] rounded-3xl glass-panel text-white">
+      <div className="w-full flex flex-col justify-center items-center h-[580px] rounded-3xl glass-panel text-white">
         <div className="animate-pulse flex flex-col items-center gap-3">
           <div className="rounded-full bg-emerald-500/20 h-10 w-10 flex items-center justify-center">
             <div className="rounded-full bg-emerald-500 h-5 w-5 animate-ping" />
@@ -56,7 +68,7 @@ export default function CoolingOffsetPanel({ calcResult, loading }: CoolingOffse
 
   if (!calcResult) {
     return (
-      <div className="w-full flex flex-col justify-center items-center h-[460px] rounded-3xl glass-panel text-white text-gray-500 text-xs">
+      <div className="w-full flex flex-col justify-center items-center h-[580px] rounded-3xl glass-panel text-white text-gray-500 text-xs">
         No calculation data. Update inputs to compute.
       </div>
     );
@@ -74,8 +86,11 @@ export default function CoolingOffsetPanel({ calcResult, loading }: CoolingOffse
     package_id = "VRM-2025-000000",
     equation_version = "v1.2",
     species_dataset_version = "v0.3",
-    financial_model_version = "v1.0",
-    weather_assumption_version = "v1.0"
+    facade_orientation = "south",
+    regulatory_framework = "none",
+    avoided_carbon_fine = 0.0,
+    water_cost_usd = 0.0,
+    is_premium_unlock = 0
   } = calcResult;
 
   const latent = details?.latent_cooling_kwh || 0;
@@ -92,8 +107,18 @@ export default function CoolingOffsetPanel({ calcResult, loading }: CoolingOffse
   const annualLow = confidence_range_low * 365.0;
   const annualHigh = confidence_range_high * 365.0;
 
+  // Commercial LEDGER
+  const dailyElectricitySavings = details?.daily_savings_usd || 0.0;
+  
+  // Standard limits for premium content
+  const avoidedFineCalculated = is_premium_unlock === 1 ? avoided_carbon_fine : 0.0;
+  const waterCostCalculated = is_premium_unlock === 1 ? water_cost_usd : 0.0;
+  
+  const netDailyFacadeYield = dailyElectricitySavings + avoidedFineCalculated - waterCostCalculated;
+  const annualNetYield = netDailyFacadeYield * 365.0;
+
   return (
-    <div className="w-full flex flex-col justify-between p-8 rounded-3xl glass-panel text-white relative overflow-hidden min-h-[460px] gap-6">
+    <div className="w-full flex flex-col justify-between p-8 rounded-3xl glass-panel text-white relative overflow-hidden min-h-[580px] gap-6">
       <div className="absolute right-0 top-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none" />
       
       {/* Header and Provenance Info */}
@@ -143,9 +168,11 @@ export default function CoolingOffsetPanel({ calcResult, loading }: CoolingOffse
         </div>
       </div>
 
-      {/* Baseline vs Vegetated Comparison Table */}
+      {/* Facade Heat Balance (kWh thermal / day) */}
       <div className="flex flex-col gap-2 p-4 rounded-2xl border border-white/5 bg-white/5">
-        <h4 className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Facade Heat Balance (kWh thermal / day)</h4>
+        <h4 className="text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+          Facade Heat Balance (kWh thermal / day) | Orientation: {facade_orientation.toUpperCase()}
+        </h4>
         
         <div className="grid grid-cols-3 gap-2 text-xs border-b border-white/5 pb-1.5 font-mono text-gray-400 font-semibold mt-1">
           <span>Scenario</span>
@@ -169,10 +196,48 @@ export default function CoolingOffsetPanel({ calcResult, loading }: CoolingOffse
             <span className="text-right text-emerald-400">-{net_reduction.toFixed(1)}</span>
             <span className="text-right font-sans font-bold text-emerald-400">{net_reduction.toFixed(1)} kWh(t)</span>
           </div>
-          <div className="grid grid-cols-3 gap-2 pt-1 border-t border-white/5 text-[10px] text-gray-500">
-            <span className="col-span-3 text-right">
-              HVAC Chiller Offset (COP): <strong className="text-gray-300 font-mono font-medium">{hvac_offset.toFixed(1)} kWh(e)/day</strong>
+        </div>
+      </div>
+
+      {/* Commercial Ledger */}
+      <div className="flex flex-col gap-2 p-4 rounded-2xl border border-emerald-500/10 bg-emerald-950/5 relative">
+        <h4 className="text-[9px] uppercase font-bold text-emerald-400 tracking-wider">
+          Commercial Utility & Compliance Ledger
+        </h4>
+
+        {is_premium_unlock !== 1 ? (
+          <div className="absolute inset-0 bg-zinc-950/75 backdrop-blur-[3px] flex flex-col justify-center items-center p-4 rounded-2xl text-center">
+            <span className="text-[10px] text-gray-300 font-semibold mb-1.5">
+              Unlock Compliance Fines & Irrigation Water Audit Loops
             </span>
+            <button
+              onClick={onOpenPaymentTerminal}
+              className="bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-black px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition cursor-pointer"
+            >
+              Unlock Premium Dashboard
+            </button>
+          </div>
+        ) : null}
+
+        <div className="flex flex-col gap-1.5 text-xs font-mono mt-1">
+          <div className="flex justify-between text-gray-300 py-0.5">
+            <span className="text-gray-400">HVAC Chiller Utility Savings</span>
+            <span className="text-emerald-400">+${dailyElectricitySavings.toFixed(2)}/day</span>
+          </div>
+          <div className="flex justify-between text-gray-300 py-0.5">
+            <span className="text-gray-400">Avoided Local Law Fines ({regulatory_framework.toUpperCase()})</span>
+            <span className="text-emerald-400">+${avoidedFineCalculated.toFixed(2)}/day</span>
+          </div>
+          <div className="flex justify-between text-gray-300 py-0.5">
+            <span className="text-gray-400">Evapotranspiration Irrigation Water Cost</span>
+            <span className="text-rose-400">-${waterCostCalculated.toFixed(2)}/day</span>
+          </div>
+          <div className="flex justify-between pt-1.5 border-t border-white/5 text-white font-bold font-sans">
+            <span className="text-emerald-400">Net Daily Facade Yield</span>
+            <span className="text-emerald-400">${netDailyFacadeYield.toFixed(2)}/day</span>
+          </div>
+          <div className="text-[9px] text-gray-500 text-right mt-0.5">
+            Annual Net Yield: <strong className="text-white">${annualNetYield.toLocaleString(undefined, { maximumFractionDigits: 2 })} / year</strong>
           </div>
         </div>
       </div>

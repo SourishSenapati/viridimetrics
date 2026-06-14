@@ -151,7 +151,9 @@ def calculate_hvac_offset(req: CalculateRequest, db: Session = Depends(get_db)):
         extinction_coefficient=cast(float, species.shading_extinction_coeff),
         added_r_value=cast(float, species.added_r_value),
         chiller_cop=cop_val,
-        electricity_rate=rate_val
+        electricity_rate=rate_val,
+        facade_orientation=req.facade_orientation or "south",
+        regulatory_framework=req.regulatory_framework or "none"
     )
 
     # Convert annual details
@@ -181,6 +183,13 @@ def calculate_hvac_offset(req: CalculateRequest, db: Session = Depends(get_db)):
         vegetated_heat_gain=round(results["vegetated_heat_gain"], 2),
         net_reduction=round(results["net_reduction"], 2),
         hvac_offset=round(results["hvac_offset"], 2),
+        
+        # Enhanced properties
+        facade_orientation=req.facade_orientation,
+        regulatory_framework=req.regulatory_framework,
+        avoided_carbon_fine=round(results["avoided_carbon_fine"], 2),
+        water_cost_usd=round(results["water_cost_usd"], 2),
+        is_premium_unlock=req.is_premium_unlock or 0,
         
         # Methodology version tracking
         equation_version=AssumptionRegistry.METHODOLOGY_VERSION,
@@ -226,6 +235,12 @@ def calculate_hvac_offset(req: CalculateRequest, db: Session = Depends(get_db)):
         financial_model_version=prov["financial_model_version"],
         weather_assumption_version=prov["weather_assumption_version"],
         generated_at=prov["generated_at"],
+        
+        facade_orientation=req.facade_orientation,
+        regulatory_framework=req.regulatory_framework,
+        avoided_carbon_fine=round(results["avoided_carbon_fine"], 2),
+        water_cost_usd=round(results["water_cost_usd"], 2),
+        is_premium_unlock=req.is_premium_unlock or 0,
         
         details=FinancialDetails(
             water_transpired_liters=round(results["water_transpiration_liters"], 2),

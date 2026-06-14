@@ -133,30 +133,44 @@ class ThermalCalculator:
         added_r_value: float,
         chiller_cop: float,
         electricity_rate: float,
-        indoor_cooling_setpoint: float = AssumptionRegistry.DEFAULT_SETPOINT_TEMP
+        indoor_cooling_setpoint: float = AssumptionRegistry.DEFAULT_SETPOINT_TEMP,
+        facade_orientation: str = "south",
+        regulatory_framework: str = "none"
     ) -> Dict[str, float]:
         """
-        Consolidates heat balances and applies chiller COP to compute electrical offsets and error bands.
+        Consolidates heat balances, applies solar orientation modifiers, evaluates regulatory avoided carbon penalties,
+        and computes net water irrigation utility expenses.
         """
-        # Latent heat calculations
+        # Determine solar radiation correction factor based on GIS facade orientation
+        orientation_key = facade_orientation.lower().strip()
+        if orientation_key == "north":
+            orientation_mult = 0.25
+        elif orientation_key in ("east", "west"):
+            orientation_mult = 0.70
+        else:
+            orientation_mult = 1.0  # South or baseline default
+            
+        scaled_solar = solar_radiation * orientation_mult
+
+        # Latent heat calculations (Penman-Monteith adapted to vertical surface)
         water_l, latent_kwh = cls.calculate_latent_heat_dissipation(
             temperature_c=temperature_c,
             humidity=humidity,
-            solar_radiation=solar_radiation,
+            solar_radiation=scaled_solar,
             wall_area_m2=wall_area_m2,
             leaf_area_index=leaf_area_index,
             crop_coefficient=crop_coefficient
         )
         
-        # Shading calculations
+        # Shading calculations (Beer-Lambert extinction)
         bare_solar, veg_solar, shading_kwh = cls.calculate_canopy_shading_reduction(
-            solar_radiation=solar_radiation,
+            solar_radiation=scaled_solar,
             wall_area_m2=wall_area_m2,
             leaf_area_index=leaf_area_index,
             extinction_coefficient=extinction_coefficient
         )
         
-        # Insulation calculations
+        # Insulation calculations (conduction envelope buffer)
         bare_cond, veg_cond, insulation_kwh = cls.calculate_envelope_insulation_benefit(
             temperature_c=temperature_c,
             wall_area_m2=wall_area_m2,
@@ -174,8 +188,26 @@ class ThermalCalculator:
         # HVAC system electrical offset (kWh electrical/day)
         hvac_offset = net_reduction / chiller_cop if chiller_cop > 0 else 0.0
         
-        # Daily financial yield
+        # Daily financial electricity savings yield
         daily_savings_usd = hvac_offset * electricity_rate
+        
+        # Evaporated water utility irrigation cost (based on standard municipal water cost of $0.003 / Liter)
+        water_cost_usd = water_l * 0.003
+        
+        # Carbon savings calculation (0.38 kg CO2 saved per kWh electrical offset)
+        co2_saved_kg = hvac_offset * AssumptionRegistry.CO2_EMISSION_FACTOR
+        
+        # Avoided Local Law carbon compliance fines
+        fine_rate = 0.0
+        framework_key = regulatory_framework.lower().strip()
+        if framework_key == "nyc_ll97":
+            fine_rate = 0.268  # $268 per metric ton = $0.268 per kg of CO2
+        elif framework_key == "boston_berdo":
+            fine_rate = 0.234  # $234 per metric ton = $0.234 per kg of CO2
+        elif framework_key == "standard_tax":
+            fine_rate = 0.150  # $150 per metric ton = $0.150 per kg of CO2
+            
+        avoided_carbon_fine = co2_saved_kg * fine_rate
         
         # Confidence Range Bounds (Uncertainty bands)
         err_fraction = AssumptionRegistry.DEFAULT_UNCERTAINTY_BAND_PERCENT / 100.0
@@ -199,5 +231,9 @@ class ThermalCalculator:
             
             # Error bands
             "confidence_range_low": confidence_low,
-            "confidence_range_high": confidence_high
+            "confidence_range_high": confidence_high,
+            
+            # Enhanced details
+            "water_cost_usd": water_cost_usd,
+            "avoided_carbon_fine": avoided_carbon_fine
         }

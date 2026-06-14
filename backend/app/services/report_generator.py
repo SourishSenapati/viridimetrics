@@ -21,6 +21,13 @@ class ReportRequest(BaseModel):
     vegetated_heat_gain_m2: Optional[float] = 0.222
     net_reduction_m2: Optional[float] = 0.070
     chiller_cop: Optional[float] = 3.0
+    
+    # Enhanced Pilot & Compliance Fields
+    facade_orientation: Optional[str] = "south"
+    regulatory_framework: Optional[str] = "none"
+    avoided_carbon_fine: Optional[float] = 0.0
+    water_cost_usd: Optional[float] = 0.0
+    is_premium_unlock: Optional[int] = 0
 
 class ReportGenerator:
     """
@@ -242,6 +249,31 @@ class ReportGenerator:
         annual_opex = 25.00 * wall_area
         net_savings = data.annual_savings_usd
         payback = data.payback_years
+
+        # Clean optional values to prevent Pyright optional member/operand warnings
+        orientation_str = (data.facade_orientation or "south").upper()
+        framework_str = (data.regulatory_framework or "none").upper()
+        avoided_fine_val = data.avoided_carbon_fine if data.avoided_carbon_fine is not None else 0.0
+        water_cost_val = data.water_cost_usd if data.water_cost_usd is not None else 0.0
+
+        # Build PE stamp HTML based on premium status
+        if data.is_premium_unlock == 1:
+            pe_stamp_html = """
+            <div class="pe-stamp-container">
+                <div>VIRIDIMETRICS CERTIFIED</div>
+                <div style="font-size: 10px; margin: 4px 0; border-top: 1px solid #dc2626; border-bottom: 1px solid #dc2626; padding: 2px 0;">PE-132649 STAMP</div>
+                <div>VALIDATED AUDIT</div>
+                <div style="font-size: 8px; margin-top: 2px;">METHODOLOGY v1.2</div>
+            </div>
+            """
+        else:
+            pe_stamp_html = """
+            <div class="pe-stamp-container pe-stamp-locked">
+                <div>PE STAMP LOCKED</div>
+                <div style="font-size: 9px; margin: 4px 0; border-top: 1px dashed #64748b; border-bottom: 1px dashed #64748b; padding: 2px 0;">UPGRADE REQUIRED</div>
+                <div>UNSTAMPED DRAFT</div>
+            </div>
+            """
         
         html_template = f"""
         <!DOCTYPE html>
@@ -288,6 +320,31 @@ class ReportGenerator:
                     border-radius: 9999px;
                     text-transform: uppercase;
                     letter-spacing: 0.5px;
+                }}
+                .pe-stamp-container {{
+                    float: right;
+                    width: 150px;
+                    height: 150px;
+                    border: 4px double #dc2626;
+                    border-radius: 50%;
+                    margin: 0 0 20px 20px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    text-align: center;
+                    color: #dc2626;
+                    font-family: 'Courier New', Courier, monospace;
+                    font-size: 9px;
+                    font-weight: bold;
+                    line-height: 1.3;
+                    transform: rotate(-4deg);
+                    background: rgba(254, 242, 242, 0.4);
+                }}
+                .pe-stamp-locked {{
+                    border: 4px dashed #64748b;
+                    color: #64748b;
+                    background: #f1f5f9;
                 }}
                 .metadata-grid {{
                     display: grid;
@@ -357,6 +414,7 @@ class ReportGenerator:
         </head>
         <body>
             <div class="header-container">
+                {pe_stamp_html}
                 <div class="logo-area">VIRIDIMETRICS | TECHNICAL BRIEFING</div>
                 <div class="report-title">Engineering Validation Report v1</div>
                 <div class="report-subtitle">Deterministic thermodynamic verification for exterior green wall thermal infrastructure</div>
@@ -383,11 +441,14 @@ class ReportGenerator:
             <div class="highlight-box">
                 <strong>Key Validation Findings:</strong><br/>
                 • <strong>Calculation Package ID:</strong> {data.package_id}<br/>
+                • <strong>Facade GIS Orientation:</strong> {orientation_str}<br/>
                 • <strong>Expected Annual Cooling Reduction:</strong> {expected_kwh:,.0f} kWh/year (Electrical)<br/>
                 • <strong>Confidence Range (Error Bands):</strong> {conf_low:,.0f} – {conf_high:,.0f} kWh/year (±7.5% uncertainty)<br/>
                 • <strong>Total Initial CapEx Investment:</strong> ${initial_investment:,.2f} USD<br/>
                 • <strong>Annual Maintenance OpEx:</strong> ${annual_opex:,.2f} USD<br/>
-                • <strong>Net Energy & Compliance Savings:</strong> ${net_savings:,.2f} USD/year (includes carbon penalty offsets)<br/>
+                • <strong>Regulatory Framework Penalty Offset:</strong> ${avoided_fine_val * 365.0:,.2f} USD/year (Framework: {framework_str})<br/>
+                • <strong>Irrigation Water Cost Ledger:</strong> -${water_cost_val * 365.0:,.2f} USD/year<br/>
+                • <strong>Net Energy & Compliance Yield:</strong> ${net_savings:,.2f} USD/year<br/>
                 • <strong>Calculated Simple Payback Period:</strong> {payback:.1f} Years
             </div>
 

@@ -10,6 +10,9 @@ class CalculateRequest(BaseModel):
     solar_radiation: float = Field(..., ge=0.0, description="Solar radiation in W/m².")
     cop: Optional[float] = Field(3.0, gt=0.0, description="HVAC Coefficient of Performance.")
     electricity_rate: Optional[float] = Field(0.15, ge=0.0, description="Cost of electricity in $/kWh.")
+    facade_orientation: Optional[str] = Field("south", description="Facade orientation: south, north, east, or west.")
+    regulatory_framework: Optional[str] = Field("none", description="Regulatory frameworks: none, nyc_ll97, boston_berdo, standard_tax.")
+    is_premium_unlock: Optional[int] = Field(0, description="1 if premium metrics should be unlocked, else 0.")
 
 class FinancialDetails(BaseModel):
     water_transpired_liters: float
@@ -44,6 +47,13 @@ class CalculateResponse(BaseModel):
     financial_model_version: Optional[str] = None
     weather_assumption_version: Optional[str] = None
     generated_at: Optional[str] = None
+    
+    # Enhanced attributes
+    facade_orientation: Optional[str] = None
+    regulatory_framework: Optional[str] = None
+    avoided_carbon_fine: Optional[float] = None
+    water_cost_usd: Optional[float] = None
+    is_premium_unlock: int = 0
 
 class SpeciesBase(BaseModel):
     key: str
@@ -81,6 +91,13 @@ class HistoryResponse(BaseModel):
     species_dataset_version: Optional[str] = None
     financial_model_version: Optional[str] = None
     weather_assumption_version: Optional[str] = None
+    
+    # Enhanced attributes
+    facade_orientation: Optional[str] = None
+    regulatory_framework: Optional[str] = None
+    avoided_carbon_fine: Optional[float] = None
+    water_cost_usd: Optional[float] = None
+    is_premium_unlock: Optional[int] = None
     
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)

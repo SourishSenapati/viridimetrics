@@ -9,6 +9,7 @@ import BuildingScenarioComparison from '../components/BuildingScenarioComparison
 import CapitalInvestmentJustification from '../components/CapitalInvestmentJustification';
 import UtilityAuditLogImporter from '../components/UtilityAuditLogImporter';
 import ExecutiveReportExporter from '../components/ExecutiveReportExporter';
+import PaymentTerminal from '../components/PaymentTerminal';
 
 interface Species {
   key: string;
@@ -50,6 +51,12 @@ interface CalculateResult {
   financial_model_version?: string;
   weather_assumption_version?: string;
   generated_at?: string;
+
+  facade_orientation?: string;
+  regulatory_framework?: string;
+  avoided_carbon_fine?: number;
+  water_cost_usd?: number;
+  is_premium_unlock?: number;
 }
 
 interface HistoryItem {
@@ -67,6 +74,12 @@ interface HistoryItem {
   vegetated_heat_gain?: number;
   net_reduction?: number;
   hvac_offset?: number;
+  
+  facade_orientation?: string;
+  regulatory_framework?: string;
+  avoided_carbon_fine?: number;
+  water_cost_usd?: number;
+  is_premium_unlock?: number;
   
   package_id?: string;
   equation_version?: string;
@@ -133,6 +146,12 @@ export default function Home() {
   const [cop, setCop] = useState(3.0);
   const [electricityRate, setElectricityRate] = useState(0.15);
 
+  // Enhanced GIS, compliance & payment states
+  const [facadeOrientation, setFacadeOrientation] = useState('south');
+  const [regulatoryFramework, setRegulatoryFramework] = useState('none');
+  const [isPremiumUnlocked, setIsPremiumUnlocked] = useState(false);
+  const [showPaymentTerminal, setShowPaymentTerminal] = useState(false);
+
   // Simulation Outputs
   const [coolingKwh, setCoolingKwh] = useState(0);
   const [details, setDetails] = useState<CalculationDetails | null>(null);
@@ -186,7 +205,10 @@ export default function Home() {
       humidity,
       solar_radiation: solarRadiation,
       cop,
-      electricity_rate: electricityRate
+      electricity_rate: electricityRate,
+      facade_orientation: facadeOrientation,
+      regulatory_framework: regulatoryFramework,
+      is_premium_unlock: isPremiumUnlocked ? 1 : 0
     };
 
     try {
@@ -209,12 +231,23 @@ export default function Home() {
       // Client-side calculations fallback logic
       const species = speciesList.find(s => s.key === plantType) || FALLBACK_SPECIES[0];
       
+      // Solar orientation modifier
+      let orientationMult = 1.0;
+      const orientKey = facadeOrientation.toLowerCase();
+      if (orientKey === 'north') {
+        orientationMult = 0.25;
+      } else if (orientKey === 'east' || orientKey === 'west') {
+        orientationMult = 0.70;
+      }
+      
+      const scaledSolar = solarRadiation * orientationMult;
+      
       const es = 0.61078 * Math.exp((17.27 * temperature) / (temperature + 237.3));
       const ea = es * (humidity / 100.0);
       const vpd = Math.max(0.0, es - ea);
       const delta = (4098.0 * es) / Math.pow(temperature + 237.3, 2);
       const gamma = 0.066;
-      const rs_mj = solarRadiation * 0.0864;
+      const rs_mj = scaledSolar * 0.0864;
       const rn = 0.7 * rs_mj;
 
       const u_wind = 2.0;
@@ -226,7 +259,7 @@ export default function Home() {
       const transpired_volume = wallArea * 3.0 * species.transpiration_rate_coeff * et0;
       const latent_cooling_kwh = transpired_volume * 2.45 * 0.277778;
 
-      const solar_kwh_m2 = solarRadiation * 0.024;
+      const solar_kwh_m2 = scaledSolar * 0.024;
       const bare_solar = wallArea * solar_kwh_m2 * 0.7;
       const transmission = Math.exp(-species.shading_extinction_coeff * 3.0);
       const shading_savings_kwh = bare_solar * (1.0 - transmission);
@@ -252,6 +285,16 @@ export default function Home() {
       const monthly_savings_usd = daily_savings_usd * 30.4375;
       const annual_savings_usd = daily_savings_usd * 365.0;
       const annual_co2_reduction_kg = saved_kwh * 365.0 * 0.38;
+
+      // Premium outputs
+      const water_cost_usd = transpired_volume * 0.003;
+      let fineRate = 0.0;
+      const frameKey = regulatoryFramework.toLowerCase();
+      if (frameKey === 'nyc_ll97') fineRate = 0.268;
+      else if (frameKey === 'boston_berdo') fineRate = 0.234;
+      else if (frameKey === 'standard_tax') fineRate = 0.150;
+      
+      const avoided_carbon_fine = saved_kwh * 0.38 * fineRate;
 
       const fallbackDetails = {
         water_transpired_liters: transpired_volume,
@@ -280,7 +323,12 @@ export default function Home() {
         species_dataset_version: "v0.3",
         financial_model_version: "v1.0",
         weather_assumption_version: "v1.0",
-        generated_at: new Date().toISOString()
+        generated_at: new Date().toISOString(),
+        facade_orientation: facadeOrientation,
+        regulatory_framework: regulatoryFramework,
+        avoided_carbon_fine,
+        water_cost_usd,
+        is_premium_unlock: isPremiumUnlocked ? 1 : 0
       };
 
       setCoolingKwh(saved_kwh);
@@ -289,11 +337,15 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }, [wallArea, plantType, temperature, humidity, solarRadiation, cop, electricityRate, speciesList, loadHistory]);
+  }, [wallArea, plantType, temperature, humidity, solarRadiation, cop, electricityRate, facadeOrientation, regulatoryFramework, isPremiumUnlocked, speciesList, loadHistory]);
 
   useEffect(() => {
     runCalculation();
   }, [runCalculation]);
+
+  const handlePaymentSuccess = () => {
+    setIsPremiumUnlocked(true);
+  };
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white relative overflow-hidden flex flex-col font-sans px-4 py-8 md:px-12 md:py-16">
@@ -378,6 +430,10 @@ export default function Home() {
                   setCop={setCop}
                   electricityRate={electricityRate}
                   setElectricityRate={setElectricityRate}
+                  facadeOrientation={facadeOrientation}
+                  setFacadeOrientation={setFacadeOrientation}
+                  regulatoryFramework={regulatoryFramework}
+                  setRegulatoryFramework={setRegulatoryFramework}
                 />
               </div>
 
@@ -385,6 +441,7 @@ export default function Home() {
                 <CoolingOffsetPanel
                   calcResult={calcResult}
                   loading={loading}
+                  onOpenPaymentTerminal={() => setShowPaymentTerminal(true)}
                 />
                 
                 <CapitalInvestmentJustification
@@ -418,6 +475,9 @@ export default function Home() {
                   plantType={plantType}
                   coolingKwh={coolingKwh}
                   electricityRate={electricityRate}
+                  calcResult={calcResult}
+                  isPremiumUnlocked={isPremiumUnlocked}
+                  onOpenPaymentTerminal={() => setShowPaymentTerminal(true)}
                 />
               </div>
 
@@ -437,6 +497,7 @@ export default function Home() {
                         <tr className="border-b border-white/5 text-gray-400 font-semibold bg-white/5">
                           <th className="px-4 py-3">Timestamp</th>
                           <th className="px-4 py-3">Package ID</th>
+                          <th className="px-4 py-3">Orientation</th>
                           <th className="px-4 py-3">Species</th>
                           <th className="px-4 py-3">Area (m²)</th>
                           <th className="px-4 py-3">Temp (°C)</th>
@@ -454,6 +515,9 @@ export default function Home() {
                             </td>
                             <td className="px-4 py-2.5 text-[10px] text-gray-400 font-mono">
                               {log.package_id || "VRM-LOCAL"}
+                            </td>
+                            <td className="px-4 py-2.5 text-[10px] text-gray-400 uppercase font-sans">
+                              {log.facade_orientation || "SOUTH"}
                             </td>
                             <td className="px-4 py-2.5 text-emerald-400 font-sans">{log.plant_type}</td>
                             <td className="px-4 py-2.5">{log.wall_area_m2}</td>
@@ -473,6 +537,13 @@ export default function Home() {
           )}
         </main>
       </div>
+
+      {/* Checkout Payment Terminal Modal */}
+      <PaymentTerminal
+        isOpen={showPaymentTerminal}
+        onClose={() => setShowPaymentTerminal(false)}
+        onPaymentSuccess={handlePaymentSuccess}
+      />
     </div>
   );
 }

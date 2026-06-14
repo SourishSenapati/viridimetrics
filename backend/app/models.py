@@ -40,6 +40,13 @@ class CalculationLog(Base):
     financial_model_version = Column(String, nullable=True)
     weather_assumption_version = Column(String, nullable=True)
     
+    # Enhanced Pilot & Compliance Fields
+    facade_orientation = Column(String, nullable=True)
+    regulatory_framework = Column(String, nullable=True)
+    avoided_carbon_fine = Column(Float, nullable=True)
+    water_cost_usd = Column(Float, nullable=True)
+    is_premium_unlock = Column(Integer, default=0, nullable=False) # 0 = Standard, 1 = Premium Unlocked
+    
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
 class IngestionAuditLog(Base):

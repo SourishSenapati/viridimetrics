@@ -24,6 +24,12 @@ interface InputPanelProps {
   setCop: (val: number) => void;
   electricityRate: number;
   setElectricityRate: (val: number) => void;
+  
+  // Enhanced GIS & Regulatory props
+  facadeOrientation: string;
+  setFacadeOrientation: (val: string) => void;
+  regulatoryFramework: string;
+  setRegulatoryFramework: (val: string) => void;
 }
 
 export default function InputPanel({
@@ -41,7 +47,11 @@ export default function InputPanel({
   cop,
   setCop,
   electricityRate,
-  setElectricityRate
+  setElectricityRate,
+  facadeOrientation,
+  setFacadeOrientation,
+  regulatoryFramework,
+  setRegulatoryFramework
 }: InputPanelProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -141,9 +151,53 @@ export default function InputPanel({
           </div>
         </div>
 
+        {/* GIS Facade Orientation Selector */}
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">GIS Facade Orientation</label>
+          <div className="relative">
+            <select
+              value={facadeOrientation}
+              onChange={(e) => setFacadeOrientation(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 appearance-none transition"
+            >
+              <option value="south" className="bg-zinc-950 text-white">South Facade (100% solar gain)</option>
+              <option value="east" className="bg-zinc-950 text-white">East Facade (70% solar gain)</option>
+              <option value="west" className="bg-zinc-950 text-white">West Facade (70% solar gain)</option>
+              <option value="north" className="bg-zinc-950 text-white">North Facade (25% diffuse gain only)</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        {/* Regulatory Framework Compliance Selector */}
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Carbon Framework Penalties</label>
+          <div className="relative">
+            <select
+              value={regulatoryFramework}
+              onChange={(e) => setRegulatoryFramework(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 appearance-none transition"
+            >
+              <option value="none" className="bg-zinc-950 text-white">None (Standard ESG Metric Only)</option>
+              <option value="nyc_ll97" className="bg-zinc-950 text-white">NYC Local Law 97 ($268/ton Carbon fine)</option>
+              <option value="boston_berdo" className="bg-zinc-950 text-white">Boston BERDO ($234/ton Carbon fine)</option>
+              <option value="standard_tax" className="bg-zinc-950 text-white">Carbon Cap-and-Tax ($150/ton fine)</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
         {/* Plant Type Selector */}
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-gray-300">Vegetation Canopy Species</label>
+          <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Vegetation Canopy Species</label>
           <div className="relative">
             <select
               value={plantType}
